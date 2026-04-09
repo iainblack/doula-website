@@ -26,6 +26,14 @@ export const draftClient = createClient({
   token: process.env.SANITY_API_TOKEN,
 })
 
+// Used in server actions that need to write data (registrations, etc.)
+// Never import this client-side.
+export const writeClient = createClient({
+  ...config,
+  useCdn: false,
+  token: process.env.SANITY_SEED_TOKEN,
+})
+
 const builder = imageUrlBuilder(client)
 
 export function urlFor(source: SanityImageSource) {

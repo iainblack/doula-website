@@ -15,6 +15,7 @@ import { contactPage } from './documents/contactPage'
 // Other content documents
 import { post } from './documents/post'
 import { author } from './documents/author'
+import { classRegistration } from './documents/classRegistration'
 
 // Singletons — co-located with their layout components
 import { navbar } from '../../../components/layout/Navbar/schema'
@@ -74,6 +75,7 @@ export const schemaTypes = [
   // Other content
   post,
   author,
+  classRegistration,
   // Singletons
   navbar,
   footer,

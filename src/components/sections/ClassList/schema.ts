@@ -21,6 +21,12 @@ export const classList = defineType({
             defineField({ name: 'price', title: 'Price', type: 'string' }),
             defineField({ name: 'ctaLabel', title: 'CTA Label', type: 'string' }),
             defineField({ name: 'ctaUrl', title: 'CTA URL', type: 'string' }),
+            defineField({
+              name: 'attendeeLimit',
+              title: 'Attendee Limit',
+              type: 'number',
+              description: 'Maximum number of registrants. Leave blank to disable sign-up.',
+            }),
           ],
           preview: {
             select: { title: 'title', subtitle: 'date' },

@@ -1,4 +1,5 @@
 import type { StructureResolver } from 'sanity/structure'
+import { AttendeesView } from './components/AttendeesView'
 
 export const structure: StructureResolver = (S) =>
   S.list()
@@ -16,7 +17,15 @@ export const structure: StructureResolver = (S) =>
         .child(S.document().schemaType('servicesPage').documentId('servicesPage')),
       S.listItem()
         .title('Classes & Workshops')
-        .child(S.document().schemaType('classesPage').documentId('classesPage')),
+        .child(
+          S.document()
+            .schemaType('classesPage')
+            .documentId('classesPage')
+            .views([
+              S.view.form().title('Content'),
+              S.view.component(AttendeesView).title('Attendees'),
+            ])
+        ),
       S.listItem()
         .title('Testimonials')
         .child(S.document().schemaType('testimonialsPage').documentId('testimonialsPage')),

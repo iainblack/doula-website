@@ -1,6 +1,6 @@
-import { urlFor } from '@/lib/sanity/client'
+import { urlFor, writeClient } from '@/lib/sanity/client'
 import { sanityFetch } from '@/lib/sanity/fetch'
-import { classesPageQuery } from '@/lib/sanity/queries'
+import { classesPageQuery, activeRegistrationsQuery } from '@/lib/sanity/queries'
 import { Hero } from '@/components/sections/Hero'
 import { ClassList } from '@/components/sections/ClassList'
 import { NewsletterSignup } from '@/components/sections/NewsletterSignup'
@@ -23,10 +23,35 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function ClassesPage() {
   let page = null
+  let registrationCounts: Record<string, number> = {}
+
   try {
     page = await sanityFetch(classesPageQuery)
   } catch {
     // Sanity not yet configured
+  }
+
+  if (page?.classList?.classes?.length) {
+    // Collect keys for classes that have an attendeeLimit set
+    const keys = page.classList.classes
+      .filter((c: { attendeeLimit?: number; _key?: string }) => c.attendeeLimit != null && c._key)
+      .map((c: { _key: string }) => c._key)
+
+    if (keys.length > 0) {
+      try {
+        // Use writeClient to bypass CDN for fresh counts
+        const registrations = await writeClient.fetch<{ classKey: string }[]>(
+          activeRegistrationsQuery,
+          { keys }
+        )
+        registrationCounts = registrations.reduce<Record<string, number>>((acc, r) => {
+          acc[r.classKey] = (acc[r.classKey] ?? 0) + 1
+          return acc
+        }, {})
+      } catch {
+        // Non-fatal — counts default to 0
+      }
+    }
   }
 
   if (!page) {
@@ -47,7 +72,9 @@ export default async function ClassesPage() {
   return (
     <>
       {page.hero && <Hero {...page.hero} />}
-      {page.classList && <ClassList {...page.classList} />}
+      {page.classList && (
+        <ClassList {...page.classList} registrationCounts={registrationCounts} />
+      )}
       {page.newsletterSignup && <NewsletterSignup {...page.newsletterSignup} />}
     </>
   )

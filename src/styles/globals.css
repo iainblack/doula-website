@@ -74,3 +74,11 @@
   --hero-min-height-lg: 720px;
   --accent-image-border: 12px;
 }
+
+@layer base {
+  button,
+  [role="button"],
+  summary {
+    cursor: pointer;
+  }
+}

@@ -82,6 +82,22 @@ export type Navbar = {
   cta?: Cta;
 };
 
+export type ClassRegistration = {
+  _id: string;
+  _type: "classRegistration";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  classKey?: string;
+  className?: string;
+  classDate?: string;
+  name?: string;
+  email?: string;
+  cancelToken?: string;
+  status?: "active" | "cancelled";
+  createdAt?: string;
+};
+
 export type Post = {
   _id: string;
   _type: "post";
@@ -303,6 +319,7 @@ export type ClassList = {
     price?: string;
     ctaLabel?: string;
     ctaUrl?: string;
+    attendeeLimit?: number;
     _key: string;
   }>;
 };
@@ -627,5 +644,5 @@ export type SanityAssetSourceData = {
   url?: string;
 };
 
-export type AllSanitySchemaTypes = SiteSettings | Footer | Navbar | Post | Author | ContactPage | TestimonialsPage | ClassesPage | ServicesPage | AboutPage | HomePage | ContactForm | ContactDetail | TestimonialsCtaBanner | TestimonialGrid | NewsletterSignup | ClassList | Faq | ServiceCards | CtaBanner | Certifications | Philosophy | HeroAbout | TestimonialQuote | FeatureGrid | EditorialBlock | ImageGallery | Hero | PortableTextBlock | ImageWithAlt | Seo | Cta | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
+export type AllSanitySchemaTypes = SiteSettings | Footer | Navbar | ClassRegistration | Post | Author | ContactPage | TestimonialsPage | ClassesPage | ServicesPage | AboutPage | HomePage | ContactForm | ContactDetail | TestimonialsCtaBanner | TestimonialGrid | NewsletterSignup | ClassList | Faq | ServiceCards | CtaBanner | Certifications | Philosophy | HeroAbout | TestimonialQuote | FeatureGrid | EditorialBlock | ImageGallery | Hero | PortableTextBlock | ImageWithAlt | Seo | Cta | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;

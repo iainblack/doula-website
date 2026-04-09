@@ -122,7 +122,7 @@ export const classesPageQuery = `*[_type == "classesPage"][0]{
     compact
   },
   classList{
-    classes[]{ _key, title, date, time, location, description, price, ctaLabel, ctaUrl }
+    classes[]{ _key, title, date, time, location, description, price, ctaLabel, ctaUrl, attendeeLimit }
   },
   newsletterSignup{
     heading,
@@ -217,6 +217,11 @@ export const postBySlugQuery = `*[_type == "post" && slug.current == $slug][0]{
   body,
   seo
 }`
+
+// ── Class Registrations ────────────────────────────────────────────────────
+// Returns all active registrations for the given class keys so the caller
+// can group them and build a counts map (classKey → count).
+export const activeRegistrationsQuery = `*[_type == "classRegistration" && classKey in $keys && status == "active"]{ classKey }`
 
 // ── Site settings ──────────────────────────────────────────────────────────
 export const siteSettingsQuery = `*[_type == "siteSettings"][0]{
