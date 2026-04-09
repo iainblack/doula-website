@@ -1,0 +1,48 @@
+{
+  "name": "stitch-site-template",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typegen": "sanity schema extract --enforce-required-fields && sanity typegen generate",
+    "seed:home": "node scripts/seed-home.mjs",
+    "seed:settings": "node scripts/seed-settings.mjs",
+    "seed:about": "node scripts/seed-about.mjs",
+    "seed:services": "node scripts/seed-services.mjs",
+    "seed:classes": "node scripts/seed-classes.mjs",
+    "seed:testimonials": "node scripts/seed-testimonials.mjs",
+    "seed:contact": "node scripts/seed-contact.mjs",
+    "test:visual": "playwright test",
+    "test:visual:update": "playwright test --update-snapshots",
+    "test:visual:ui": "playwright test --ui"
+  },
+  "dependencies": {
+    "@portabletext/react": "^3.2.0",
+    "@sanity/image-url": "^1.2.0",
+    "@sanity/presentation": "^2.0.0",
+    "@sanity/preview-url-secret": "^4.0.4",
+    "@sanity/vision": "^3.99.0",
+    "@sanity/visual-editing": "^5.3.3",
+    "next": "^15.0.0",
+    "next-sanity": "^9.12.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-is": "^19.2.4",
+    "sanity": "^3.99.0",
+    "styled-components": "^6.3.12",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.59.1",
+    "@tailwindcss/postcss": "^4.0.0",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "postcss": "^8.4.0",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.7.0"
+  }
+}
