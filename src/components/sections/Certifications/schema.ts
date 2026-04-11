@@ -15,6 +15,7 @@ export const certifications = defineType({
       name: 'subheading',
       title: 'Subheading',
       type: 'string',
+      description: 'Optional. A short line shown beneath the heading.',
     }),
     defineField({
       name: 'items',
@@ -25,10 +26,26 @@ export const certifications = defineType({
           type: 'object',
           name: 'certificationItem',
           fields: [
-            defineField({ name: 'icon', title: 'Material Icon Name', type: 'string', description: 'e.g. "verified_user", "self_improvement"' }),
+            defineField({
+              name: 'icon',
+              title: 'Icon',
+              type: 'string',
+              description: 'Optional. Enter a Material Symbols icon name, e.g. verified_user, self_improvement. Browse icons at fonts.google.com/icons',
+            }),
             defineField({ name: 'title', title: 'Title', type: 'string', validation: r => r.required() }),
-            defineField({ name: 'description', title: 'Description', type: 'text', rows: 2 }),
-            defineField({ name: 'certUrl', title: 'Certificate URL', type: 'url', description: 'Link to PDF or certificate page' }),
+            defineField({
+              name: 'description',
+              title: 'Description',
+              type: 'text',
+              rows: 2,
+              description: 'Optional. A short sentence about this certification.',
+            }),
+            defineField({
+              name: 'certUrl',
+              title: 'Certificate URL',
+              type: 'url',
+              description: 'Optional. Link to a PDF or certificate page. Shows a "View Certificate" link on the card.',
+            }),
           ],
           preview: {
             select: { title: 'title', subtitle: 'description' },

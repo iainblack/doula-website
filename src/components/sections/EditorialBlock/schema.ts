@@ -22,20 +22,20 @@ export const editorialBlock = defineType({
       name: 'highlightText',
       title: 'Highlight Text',
       type: 'string',
-      description: 'A short phrase displayed with emphasis (e.g. in a decorative callout)',
+      description: 'Optional. A short phrase displayed in small caps above the heading.',
     }),
     defineField({
       name: 'pullQuote',
       title: 'Pull Quote',
       type: 'text',
       rows: 2,
-      description: 'An extracted quote displayed prominently alongside the body text',
+      description: 'Optional. A highlighted quote displayed prominently alongside the body text.',
     }),
     defineField({
       name: 'image',
       title: 'Image',
       type: 'imageWithAlt',
-      description: 'Optional. When present, layout shifts to 2/3 text + 1/3 image.',
+      description: 'Optional. When present, the layout shifts to two-thirds text and one-third image.',
     }),
   ],
   preview: {

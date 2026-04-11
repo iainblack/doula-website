@@ -5,9 +5,9 @@ export const contactPage = defineType({
   title: 'Contact Page',
   type: 'document',
   fields: [
-    defineField({ name: 'seo', title: 'SEO', type: 'seo' }),
     defineField({ name: 'contactDetail', title: 'Contact Detail', type: 'contactDetail' }),
     defineField({ name: 'contactForm', title: 'Contact Form', type: 'contactForm' }),
+    defineField({ name: 'seo', title: 'SEO', type: 'seo' }),
   ],
   preview: {
     prepare: () => ({ title: 'Contact Page' }),

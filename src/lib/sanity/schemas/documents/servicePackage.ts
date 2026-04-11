@@ -1,0 +1,142 @@
+import { defineType, defineField } from 'sanity'
+
+export const servicePackage = defineType({
+  name: 'servicePackage',
+  title: 'Service Package',
+  type: 'document',
+  groups: [
+    { name: 'content', title: 'Content', default: true },
+    { name: 'pricing', title: 'Pricing & Sessions' },
+    { name: 'seo', title: 'SEO' },
+  ],
+  fields: [
+    defineField({
+      name: 'title',
+      title: 'Title',
+      type: 'string',
+      group: 'content',
+      validation: (r) => r.required(),
+    }),
+    defineField({
+      name: 'slug',
+      title: 'Slug',
+      type: 'slug',
+      group: 'content',
+      options: { source: 'title' },
+      validation: (r) => r.required(),
+    }),
+    defineField({
+      name: 'icon',
+      title: 'Icon',
+      type: 'string',
+      group: 'content',
+      description: 'Optional. Enter a Material Symbols icon name, e.g. child_care, favorite, home_health. Browse icons at fonts.google.com/icons',
+    }),
+    defineField({
+      name: 'tagline',
+      title: 'Tagline',
+      type: 'string',
+      group: 'content',
+      description: 'Optional. Short descriptor shown below the title on the detail page.',
+    }),
+    defineField({
+      name: 'summary',
+      title: 'Summary',
+      type: 'text',
+      group: 'content',
+      rows: 3,
+      description: 'Short description shown on the services page card.',
+      validation: (r) => r.required(),
+    }),
+    defineField({
+      name: 'pullQuote',
+      title: 'Pull Quote',
+      type: 'string',
+      group: 'content',
+      description: 'Optional. Short italic quote shown in the compact card variant.',
+    }),
+    defineField({
+      name: 'heroImage',
+      title: 'Hero Image',
+      type: 'imageWithAlt',
+      group: 'content',
+      description: 'Optional. Image shown at the top of the service detail page.',
+    }),
+    defineField({
+      name: 'description',
+      title: 'Description',
+      type: 'portableTextBlock',
+      group: 'content',
+      description: 'Optional. Full rich-text description shown on the detail page.',
+    }),
+    defineField({
+      name: 'features',
+      title: 'Features',
+      type: 'array',
+      group: 'content',
+      of: [{ type: 'string' }],
+      description: 'Optional. Checklist of what is included in this package.',
+    }),
+    defineField({
+      name: 'pricingLabel',
+      title: 'Pricing Label',
+      type: 'string',
+      group: 'pricing',
+      description: 'Optional. Label shown above the price (e.g. "Investment", "Starting at")',
+    }),
+    defineField({
+      name: 'pricing',
+      title: 'Pricing',
+      type: 'string',
+      group: 'pricing',
+      initialValue: 'Free',
+      description: 'e.g. "$1,800", "Starting at $2,400". Defaults to "Free" if left blank.',
+    }),
+    defineField({
+      name: 'sessions',
+      title: 'Sessions',
+      type: 'array',
+      group: 'pricing',
+      description: 'Optional. A breakdown of sessions included in this package.',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            defineField({ name: 'duration', title: 'Duration', type: 'string', description: 'e.g. "90 min"' }),
+            defineField({ name: 'label', title: 'Label', type: 'string', description: 'e.g. "Initial Consult"' }),
+          ],
+          preview: {
+            select: { title: 'duration', subtitle: 'label' },
+            prepare: ({ title, subtitle }) => ({ title: title || 'Session', subtitle }),
+          },
+        },
+      ],
+    }),
+    defineField({
+      name: 'ctaLabel',
+      title: 'Book Button Text',
+      type: 'string',
+      group: 'pricing',
+      initialValue: 'Book a Consultation',
+      description: 'Optional. Text on the booking button shown on the service detail page. Defaults to "Book a Consultation". Always links to the Contact page.',
+    }),
+    defineField({
+      name: 'seo',
+      title: 'SEO',
+      type: 'seo',
+      group: 'seo',
+    }),
+  ],
+  preview: {
+    select: {
+      title: 'title',
+      subtitle: 'pricing',
+      media: 'heroImage.image',
+    },
+    prepare: ({ title, subtitle, media }) => ({
+      title: title || 'Service Package',
+      subtitle: subtitle || '',
+      media,
+    }),
+  },
+})

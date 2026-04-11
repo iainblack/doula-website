@@ -16,7 +16,7 @@ export const philosophy = defineType({
       title: 'Body',
       type: 'text',
       rows: 8,
-      description: 'Separate paragraphs with a blank line between them',
+      description: 'Separate paragraphs with a blank line between them.',
       validation: r => r.required(),
     }),
     defineField({
@@ -24,7 +24,7 @@ export const philosophy = defineType({
       title: 'Pull Quote',
       type: 'text',
       rows: 3,
-      description: 'Highlighted quote shown with a left border accent',
+      description: 'Optional. A highlighted quote shown with a left border accent below the body text.',
     }),
   ],
   preview: {

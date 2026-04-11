@@ -2,7 +2,7 @@ import { defineType, defineField } from 'sanity'
 
 export const testimonialsCtaBanner = defineType({
   name: 'testimonialsCtaBanner',
-  title: 'Testimonials CTA Banner',
+  title: 'Call to Action Banner',
   type: 'object',
   fields: [
     defineField({
@@ -16,20 +16,23 @@ export const testimonialsCtaBanner = defineType({
       title: 'Body',
       type: 'text',
       rows: 2,
+      description: 'Optional. Supporting paragraph shown beneath the heading.',
     }),
     defineField({
       name: 'primaryCta',
-      title: 'Primary CTA',
+      title: 'Primary Button',
       type: 'cta',
+      description: 'Optional. Main action button (e.g. "Book a Consultation")',
     }),
     defineField({
       name: 'secondaryCta',
-      title: 'Secondary CTA',
+      title: 'Secondary Button',
       type: 'cta',
+      description: 'Optional. Second button shown alongside the primary.',
     }),
   ],
   preview: {
     select: { title: 'heading' },
-    prepare: ({ title }) => ({ title: title || 'Testimonials CTA Banner', subtitle: 'Testimonials CTA Banner Section' }),
+    prepare: ({ title }) => ({ title: title || 'Call to Action Banner', subtitle: 'Call to Action Banner Section' }),
   },
 })

@@ -16,11 +16,13 @@ export const newsletterSignup = defineType({
       title: 'Body',
       type: 'text',
       rows: 2,
+      description: 'Optional. A short line of supporting text beneath the heading.',
     }),
     defineField({
       name: 'buttonLabel',
       title: 'Button Label',
       type: 'string',
+      description: 'Optional. Defaults to "Subscribe" if left blank.',
     }),
   ],
   preview: {

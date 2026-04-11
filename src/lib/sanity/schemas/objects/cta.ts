@@ -2,7 +2,7 @@ import { defineType, defineField } from 'sanity'
 
 export const cta = defineType({
   name: 'cta',
-  title: 'Call to Action',
+  title: 'Button',
   type: 'object',
   fields: [
     defineField({
@@ -13,28 +13,16 @@ export const cta = defineType({
     }),
     defineField({
       name: 'url',
-      title: 'URL',
+      title: 'Link',
       type: 'string',
+      description: 'Use /contact for the contact page, or a full URL (https://...) for external links.',
       validation: (r) => r.required(),
-    }),
-    defineField({
-      name: 'style',
-      title: 'Style',
-      type: 'string',
-      options: {
-        list: [
-          { title: 'Primary', value: 'primary' },
-          { title: 'Secondary', value: 'secondary' },
-          { title: 'Outline', value: 'outline' },
-          { title: 'Ghost', value: 'ghost' },
-        ],
-      },
-      initialValue: 'primary',
     }),
     defineField({
       name: 'newTab',
       title: 'Open in new tab',
       type: 'boolean',
+      description: 'Turn on for external links that should open without leaving the site.',
       initialValue: false,
     }),
   ],

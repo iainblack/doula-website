@@ -5,22 +5,50 @@ export const contactDetail = defineType({
   title: 'Contact Detail',
   type: 'object',
   fields: [
-    defineField({ name: 'overline', title: 'Overline', type: 'string' }),
+    defineField({
+      name: 'overline',
+      title: 'Overline',
+      type: 'string',
+      description: 'Optional. Small label above the headline (e.g. "Let\'s Connect")',
+    }),
     defineField({ name: 'headline', title: 'Headline', type: 'string', validation: r => r.required() }),
-    defineField({ name: 'headlineEmphasis', title: 'Italic Emphasis (portion of headline)', type: 'string' }),
-    defineField({ name: 'body', title: 'Body Text', type: 'text', rows: 3 }),
+    defineField({
+      name: 'headlineEmphasis',
+      title: 'Headline Italic Phrase',
+      type: 'string',
+      description: 'Optional. A word or phrase within the headline to render in italic.',
+    }),
+    defineField({
+      name: 'body',
+      title: 'Body Text',
+      type: 'text',
+      rows: 3,
+      description: 'Optional. Supporting paragraph shown beneath the headline.',
+    }),
     defineField({
       name: 'contactMethods',
       title: 'Contact Methods',
       type: 'array',
+      description: 'Phone, email, location, and any other ways people can reach you.',
+      validation: (r) => r.required().min(1),
       of: [
         {
           type: 'object',
           fields: [
-            defineField({ name: 'icon', title: 'Material Symbol Icon', type: 'string' }),
-            defineField({ name: 'label', title: 'Label (e.g. "Email")', type: 'string' }),
-            defineField({ name: 'value', title: 'Display Value', type: 'string' }),
-            defineField({ name: 'url', title: 'URL / href', type: 'string' }),
+            defineField({
+              name: 'icon',
+              title: 'Icon',
+              type: 'string',
+              description: 'Optional. Enter a Material Symbols icon name, e.g. phone, mail, location_on. Browse at fonts.google.com/icons',
+            }),
+            defineField({ name: 'label', title: 'Label', type: 'string', description: 'Optional. e.g. "Email", "Phone", "Location"' }),
+            defineField({ name: 'value', title: 'Display Text', type: 'string', description: 'The text shown to visitors, e.g. "hello@example.com"' }),
+            defineField({
+              name: 'url',
+              title: 'Link',
+              type: 'string',
+              description: 'Optional. Use mailto:hello@example.com for email, tel:+1... for phone, or a full URL.',
+            }),
           ],
           preview: {
             select: { title: 'label', subtitle: 'value' },
@@ -29,8 +57,18 @@ export const contactDetail = defineType({
         },
       ],
     }),
-    defineField({ name: 'image', title: 'Image', type: 'imageWithAlt' }),
-    defineField({ name: 'pullQuote', title: 'Pull Quote (on image overlay)', type: 'string' }),
+    defineField({
+      name: 'image',
+      title: 'Image',
+      type: 'imageWithAlt',
+      description: 'Optional. Portrait shown to the right of the contact details.',
+    }),
+    defineField({
+      name: 'pullQuote',
+      title: 'Pull Quote',
+      type: 'string',
+      description: 'Optional. Short quote shown in a coloured box overlapping the image (desktop only).',
+    }),
   ],
   preview: {
     select: { title: 'headline' },

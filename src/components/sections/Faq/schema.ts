@@ -9,6 +9,7 @@ export const faq = defineType({
       name: 'heading',
       title: 'Heading',
       type: 'string',
+      description: 'Optional. Section heading shown above the questions.',
     }),
     defineField({
       name: 'faqs',

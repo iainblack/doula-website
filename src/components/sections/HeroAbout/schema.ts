@@ -9,7 +9,7 @@ export const heroAbout = defineType({
       name: 'overline',
       title: 'Overline',
       type: 'string',
-      description: 'Small tagline above the headline (e.g. "Warmth • Trust • Intention")',
+      description: 'Optional. Small tagline above the headline (e.g. "Warmth • Trust • Intention")',
     }),
     defineField({
       name: 'headline',
@@ -21,18 +21,20 @@ export const heroAbout = defineType({
       name: 'headlineEmphasis',
       title: 'Headline Italic Phrase',
       type: 'string',
-      description: 'A word or phrase within the headline to render in italic',
+      description: 'Optional. A word or phrase within the headline to render in italic.',
     }),
     defineField({
       name: 'body',
       title: 'Body',
       type: 'text',
       rows: 3,
+      validation: (r) => r.required(),
     }),
     defineField({
       name: 'image',
       title: 'Headshot / Portrait',
       type: 'imageWithAlt',
+      description: 'Optional. Portrait shown to the right of the text on desktop.',
     }),
   ],
   preview: {
