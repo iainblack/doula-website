@@ -13,6 +13,22 @@
  */
 
 // Source: schema.json
+export type SiteTheme = {
+  _id: string;
+  _type: "siteTheme";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  colorPrimary?: Color;
+  colorPrimaryHover?: Color;
+  colorPrimaryForeground?: Color;
+  colorBackground?: Color;
+  colorSurface?: Color;
+  colorForeground?: Color;
+  colorMuted?: Color;
+  colorBorder?: Color;
+};
+
 export type SiteSettings = {
   _id: string;
   _type: "siteSettings";
@@ -34,11 +50,12 @@ export type SiteSettings = {
     _type: "image";
   };
   socials?: {
-    twitter?: string;
-    github?: string;
-    linkedin?: string;
     instagram?: string;
+    facebook?: string;
+    linkedin?: string;
+    tiktok?: string;
   };
+  contactEmail?: string;
   analyticsId?: string;
 };
 
@@ -82,6 +99,30 @@ export type Navbar = {
   cta?: Cta;
 };
 
+export type EmailBlast = {
+  _id: string;
+  _type: "emailBlast";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  subject: string;
+  previewText?: string;
+  body: string;
+  status?: "draft" | "sent";
+  sentAt?: string;
+};
+
+export type Subscriber = {
+  _id: string;
+  _type: "subscriber";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  email: string;
+  subscribedAt?: string;
+  status?: "active" | "unsubscribed";
+};
+
 export type ClassRegistration = {
   _id: string;
   _type: "classRegistration";
@@ -116,7 +157,7 @@ export type Post = {
   };
   publishedAt?: string;
   categories?: Array<string>;
-  body?: Array<{
+  body: Array<{
     children?: Array<{
       marks?: Array<string>;
       text?: string;
@@ -180,9 +221,9 @@ export type ContactPage = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  seo?: Seo;
   contactDetail?: ContactDetail;
   contactForm?: ContactForm;
+  seo?: Seo;
 };
 
 export type TestimonialsPage = {
@@ -191,10 +232,10 @@ export type TestimonialsPage = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  seo?: Seo;
   hero?: Hero;
   testimonialGrid?: TestimonialGrid;
   ctaBanner?: TestimonialsCtaBanner;
+  seo?: Seo;
 };
 
 export type ClassesPage = {
@@ -203,10 +244,10 @@ export type ClassesPage = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  seo?: Seo;
   hero?: Hero;
   classList?: ClassList;
   newsletterSignup?: NewsletterSignup;
+  seo?: Seo;
 };
 
 export type ServicesPage = {
@@ -215,10 +256,10 @@ export type ServicesPage = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  seo?: Seo;
   hero?: Hero;
   serviceCards?: ServiceCards;
   faq?: Faq;
+  seo?: Seo;
 };
 
 export type AboutPage = {
@@ -227,12 +268,12 @@ export type AboutPage = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  seo?: Seo;
   hero?: HeroAbout;
   philosophy?: Philosophy;
   certifications?: Certifications;
   testimonialQuote?: TestimonialQuote;
   ctaBanner?: CtaBanner;
+  seo?: Seo;
 };
 
 export type HomePage = {
@@ -241,12 +282,12 @@ export type HomePage = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  seo?: Seo;
   hero?: Hero;
   imageGallery?: ImageGallery;
   editorialBlock?: EditorialBlock;
   featureGrid?: FeatureGrid;
   testimonialQuote?: TestimonialQuote;
+  seo?: Seo;
 };
 
 export type ContactForm = {
@@ -266,7 +307,7 @@ export type ContactDetail = {
   headline: string;
   headlineEmphasis?: string;
   body?: string;
-  contactMethods?: Array<{
+  contactMethods: Array<{
     icon?: string;
     label?: string;
     value?: string;
@@ -294,6 +335,7 @@ export type TestimonialGrid = {
     body?: string;
     attribution?: string;
     attributionDetail?: string;
+    variant: "asymmetric" | "editorial" | "gallery";
     images?: Array<{
       _key: string;
     } & ImageWithAlt>;
@@ -336,24 +378,73 @@ export type Faq = {
 
 export type ServiceCards = {
   _type: "serviceCards";
-  services?: Array<{
-    icon?: string;
-    title: string;
-    body?: string;
-    features?: Array<string>;
-    pullQuote?: string;
-    pricingLabel?: string;
-    pricing?: string;
-    ctaLabel?: string;
-    ctaUrl?: string;
-    image?: ImageWithAlt;
-    sessions?: Array<{
-      duration?: string;
-      label?: string;
-      _key: string;
-    }>;
+  packages?: Array<{
+    package: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "servicePackage";
+    };
+    variant: "featured" | "compact" | "highlighted" | "media";
     _key: string;
   }>;
+};
+
+export type ServicePackage = {
+  _id: string;
+  _type: "servicePackage";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title: string;
+  slug: Slug;
+  icon?: string;
+  tagline?: string;
+  summary: string;
+  pullQuote?: string;
+  heroImage?: ImageWithAlt;
+  description?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "normal" | "h2" | "h3" | "h4" | "blockquote";
+    listItem?: "bullet" | "number";
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  } | {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    caption?: string;
+    _type: "image";
+    _key: string;
+  }>;
+  features?: Array<string>;
+  pricingLabel?: string;
+  pricing?: string;
+  sessions?: Array<{
+    duration?: string;
+    label?: string;
+    _key: string;
+  }>;
+  ctaLabel?: string;
+  seo?: Seo;
 };
 
 export type CtaBanner = {
@@ -392,7 +483,7 @@ export type HeroAbout = {
   overline?: string;
   headline: string;
   headlineEmphasis?: string;
-  body?: string;
+  body: string;
   image?: ImageWithAlt;
 };
 
@@ -438,14 +529,12 @@ export type Hero = {
   _type: "hero";
   overline?: string;
   headline: string;
-  subheadline?: string;
   body?: string;
   headlineEmphasis?: string;
   image?: ImageWithAlt;
   accentImage?: ImageWithAlt;
   primaryCta?: Cta;
   secondaryCta?: Cta;
-  hasGradientBg?: boolean;
   compact?: boolean;
 };
 
@@ -484,7 +573,7 @@ export type PortableTextBlock = Array<{
 
 export type ImageWithAlt = {
   _type: "imageWithAlt";
-  image?: {
+  image: {
     asset?: {
       _ref: string;
       _type: "reference";
@@ -522,8 +611,40 @@ export type Cta = {
   _type: "cta";
   label: string;
   url: string;
-  style?: "primary" | "secondary" | "outline" | "ghost";
   newTab?: boolean;
+};
+
+export type Color = {
+  _type: "color";
+  hex?: string;
+  alpha?: number;
+  hsl?: HslaColor;
+  hsv?: HsvaColor;
+  rgb?: RgbaColor;
+};
+
+export type RgbaColor = {
+  _type: "rgbaColor";
+  r?: number;
+  g?: number;
+  b?: number;
+  a?: number;
+};
+
+export type HsvaColor = {
+  _type: "hsvaColor";
+  h?: number;
+  s?: number;
+  v?: number;
+  a?: number;
+};
+
+export type HslaColor = {
+  _type: "hslaColor";
+  h?: number;
+  s?: number;
+  l?: number;
+  a?: number;
 };
 
 export type SanityImagePaletteSwatch = {
@@ -644,5 +765,5 @@ export type SanityAssetSourceData = {
   url?: string;
 };
 
-export type AllSanitySchemaTypes = SiteSettings | Footer | Navbar | ClassRegistration | Post | Author | ContactPage | TestimonialsPage | ClassesPage | ServicesPage | AboutPage | HomePage | ContactForm | ContactDetail | TestimonialsCtaBanner | TestimonialGrid | NewsletterSignup | ClassList | Faq | ServiceCards | CtaBanner | Certifications | Philosophy | HeroAbout | TestimonialQuote | FeatureGrid | EditorialBlock | ImageGallery | Hero | PortableTextBlock | ImageWithAlt | Seo | Cta | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
+export type AllSanitySchemaTypes = SiteTheme | SiteSettings | Footer | Navbar | EmailBlast | Subscriber | ClassRegistration | Post | Author | ContactPage | TestimonialsPage | ClassesPage | ServicesPage | AboutPage | HomePage | ContactForm | ContactDetail | TestimonialsCtaBanner | TestimonialGrid | NewsletterSignup | ClassList | Faq | ServiceCards | ServicePackage | CtaBanner | Certifications | Philosophy | HeroAbout | TestimonialQuote | FeatureGrid | EditorialBlock | ImageGallery | Hero | PortableTextBlock | ImageWithAlt | Seo | Cta | Color | RgbaColor | HsvaColor | HslaColor | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;
