@@ -7,19 +7,29 @@
 import {presentationTool, type DocumentLocation} from 'sanity/presentation'
 import {defineConfig} from 'sanity'
 import {structureTool} from 'sanity/structure'
+import {unsplashImageAsset} from 'sanity-plugin-asset-source-unsplash'
+import {colorInput} from '@sanity/color-input'
 import {Observable, map} from 'rxjs'
 
 // Go to https://www.sanity.io/docs/api-versioning to learn how API versioning works
 import {apiVersion, dataset, projectId} from './src/sanity/env'
 import {schemaTypes} from './src/lib/sanity/schemas'
 import {structure} from './src/sanity/structure'
+import {SendBlastAction} from './src/sanity/components/SendBlastAction'
 
 export default defineConfig({
   basePath: '/studio',
   projectId,
   dataset,
-  // Add and edit the content schema in the './sanity/schemaTypes' folder
   schema: { types: schemaTypes },
+  document: {
+    actions: (prev, context) => {
+      if (context.schemaType === 'emailBlast') {
+        return [...prev, SendBlastAction]
+      }
+      return prev
+    },
+  },
   plugins: [
     presentationTool({
       previewUrl: {
@@ -41,6 +51,30 @@ export default defineConfig({
           contactPage: '/contact',
           navbar: '/',
           footer: '/',
+        }
+
+        if (type === 'servicePackage') {
+          return new Observable((observer) => {
+            const sub = documentStore.listenQuery(
+              `*[_id == $id][0]{ slug }`,
+              {id},
+              {perspective: 'previewDrafts'},
+            ).pipe(
+              map((doc) =>
+                doc?.slug?.current
+                  ? {
+                      locations: [
+                        {
+                          title: doc.slug.current,
+                          href: `/services/${doc.slug.current}`,
+                        } satisfies DocumentLocation,
+                      ],
+                    }
+                  : null,
+              ),
+            ).subscribe(observer)
+            return () => sub.unsubscribe()
+          })
         }
 
         if (type in typeToPath) {
@@ -71,5 +105,7 @@ export default defineConfig({
       },
     }),
     structureTool({structure}),
+    unsplashImageAsset(),
+    colorInput(),
   ],
 })

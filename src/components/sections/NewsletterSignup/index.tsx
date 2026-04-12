@@ -1,17 +1,32 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useTransition } from 'react'
+import { subscribeNewsletter } from '@/actions/newsletter'
 import type { NewsletterSignup as NewsletterSignupType } from '@/types/sanity.generated'
 
 type NewsletterSignupProps = Omit<NewsletterSignupType, '_type'>
 
 export function NewsletterSignup({ heading, body, buttonLabel }: NewsletterSignupProps) {
-  const [email, setEmail] = useState('')
+  const [isPending, startTransition] = useTransition()
   const [submitted, setSubmitted] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    if (email) setSubmitted(true)
+    setError(null)
+    const formData = new FormData(e.currentTarget)
+    startTransition(async () => {
+      try {
+        const result = await subscribeNewsletter(formData)
+        if ('error' in result) {
+          setError(result.error)
+        } else {
+          setSubmitted(true)
+        }
+      } catch {
+        setError('Something went wrong. Please try again.')
+      }
+    })
   }
 
   return (
@@ -26,22 +41,27 @@ export function NewsletterSignup({ heading, body, buttonLabel }: NewsletterSignu
         {submitted ? (
           <p className="text-primary font-body font-semibold">Thank you for subscribing!</p>
         ) : (
-          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4">
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              placeholder="Your email address"
-              className="flex-grow bg-white border-none rounded-lg px-6 py-4 focus:ring-1 focus:ring-primary transition-shadow font-body"
-            />
-            <button
-              type="submit"
-              className="bg-primary text-primary-foreground px-10 py-4 rounded-lg font-semibold hover:opacity-90 transition-all font-body"
-            >
-              {buttonLabel ?? 'Subscribe'}
-            </button>
-          </form>
+          <>
+            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4">
+              <input
+                type="email"
+                name="email"
+                required
+                placeholder="Your email address"
+                className="flex-grow bg-white border-none rounded-lg px-6 py-4 focus:ring-1 focus:ring-primary transition-shadow font-body"
+              />
+              <button
+                type="submit"
+                disabled={isPending}
+                className="bg-primary text-primary-foreground px-10 py-4 rounded-lg font-semibold hover:opacity-90 transition-all font-body disabled:opacity-60"
+              >
+                {isPending ? 'Subscribing…' : (buttonLabel ?? 'Subscribe')}
+              </button>
+            </form>
+            {error && (
+              <p className="text-sm text-red-600 mt-3">{error}</p>
+            )}
+          </>
         )}
       </div>
     </section>

@@ -11,6 +11,8 @@ import {
   EditIcon,
   UsersIcon,
   CogIcon,
+  ComposeIcon,
+  ColorWheelIcon,
 } from '@sanity/icons'
 import { AttendeesView } from './components/AttendeesView'
 
@@ -41,15 +43,7 @@ export const structure: StructureResolver = (S) =>
               S.listItem()
                 .title('Classes & Workshops Page')
                 .icon(CalendarIcon)
-                .child(
-                  S.document()
-                    .schemaType('classesPage')
-                    .documentId('classesPage')
-                    .views([
-                      S.view.form().title('Content'),
-                      S.view.component(AttendeesView).title('Attendees'),
-                    ])
-                ),
+                .child(S.document().schemaType('classesPage').documentId('classesPage')),
               S.listItem()
                 .title('Testimonials Page')
                 .icon(FaceHappyIcon)
@@ -79,6 +73,10 @@ export const structure: StructureResolver = (S) =>
                 .title('Footer')
                 .icon(OlistIcon)
                 .child(S.document().schemaType('footer').documentId('footer')),
+              S.listItem()
+                .title('Site Theme')
+                .icon(ColorWheelIcon)
+                .child(S.document().schemaType('siteTheme').documentId('siteTheme')),
             ])
         ),
 
@@ -100,15 +98,31 @@ export const structure: StructureResolver = (S) =>
 
       S.divider(),
 
-      // ── Submissions ────────────────────────────────────────────
+      // ── Class Attendees ────────────────────────────────────────
       S.listItem()
-        .title('Submissions')
+        .title('Class Attendees')
+        .icon(UsersIcon)
+        .child(
+          S.document()
+            .schemaType('classesPage')
+            .documentId('classesPage')
+            .views([
+              S.view.component(AttendeesView).title('Class Attendees'),
+            ])
+        ),
+
+      S.divider(),
+
+      // ── Mailing List ───────────────────────────────────────────
+      S.listItem()
+        .title('Mailing List')
         .icon(EnvelopeIcon)
         .child(
           S.list()
-            .title('Submissions')
+            .title('Mailing List')
             .items([
-              S.documentTypeListItem('classRegistration').title('Class Registrations').icon(CalendarIcon),
+              S.documentTypeListItem('subscriber').title('Subscribers').icon(UsersIcon),
+              S.documentTypeListItem('emailBlast').title('Email Blasts').icon(ComposeIcon),
             ])
         ),
 

@@ -16,11 +16,15 @@ import { contactPage } from './documents/contactPage'
 import { post } from './documents/post'
 import { author } from './documents/author'
 import { classRegistration } from './documents/classRegistration'
+import { servicePackage } from './documents/servicePackage'
+import { subscriber } from './documents/subscriber'
+import { emailBlast } from './documents/emailBlast'
 
 // Singletons — co-located with their layout components
 import { navbar } from '../../../components/layout/Navbar/schema'
 import { footer } from '../../../components/layout/Footer/schema'
 import { siteSettings } from './singletons/siteSettings'
+import { siteTheme } from './singletons/siteTheme'
 
 // Section object schemas — embedded in page documents
 import { hero } from '../../../components/sections/Hero/schema'
@@ -76,8 +80,12 @@ export const schemaTypes = [
   post,
   author,
   classRegistration,
+  servicePackage,
+  subscriber,
+  emailBlast,
   // Singletons
   navbar,
   footer,
   siteSettings,
+  siteTheme,
 ]
