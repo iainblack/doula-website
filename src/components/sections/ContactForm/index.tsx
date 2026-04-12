@@ -48,7 +48,7 @@ export function ContactForm({ heading, buttonLabel, subjectOptions }: ContactFor
             </span>
             <h3 className="font-heading text-2xl text-foreground">Message received</h3>
             <p className="text-muted font-body">
-              Thank you for reaching out. I'll be in touch with you soon.
+              Thank you for reaching out. I&apos;ll be in touch with you soon.
             </p>
           </div>
         ) : (

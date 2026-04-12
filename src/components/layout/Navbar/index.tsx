@@ -1,8 +1,10 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
+import { urlFor } from '@/lib/sanity/client'
 
 interface NavLink {
   label: string
@@ -28,11 +30,22 @@ export function Navbar({ data }: { data: NavbarData | null }) {
     <nav className="fixed top-0 w-full z-50">
       {/* Blur applied to a non-containing child so fixed descendants position to the viewport */}
       <div className="absolute inset-0 bg-surface/80 backdrop-blur-md bg-gradient-to-b from-surface to-transparent pointer-events-none" aria-hidden="true" />
-      <div className="relative z-50 flex justify-between items-center px-8 py-6 max-w-7xl mx-auto">
+      <div className="relative z-50 flex justify-between items-center px-8 py-3 max-w-7xl mx-auto">
 
-        {/* Brand name */}
-        <Link href="/" className="text-2xl font-heading italic text-primary">
-          The Mindful Doula
+        {/* Logo / Brand */}
+        <Link href="/" className="flex items-center">
+          {data?.logo?.asset ? (
+            <Image
+              src={urlFor(data.logo).height(80).auto('format').url()}
+              alt="Logo"
+              width={240}
+              height={80}
+              className="h-16 w-auto object-contain"
+              priority
+            />
+          ) : (
+            <span className="text-2xl font-heading italic text-primary">The Mindful Doula</span>
+          )}
         </Link>
 
         {/* Desktop nav links */}

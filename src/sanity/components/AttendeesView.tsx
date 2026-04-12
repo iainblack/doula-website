@@ -45,6 +45,7 @@ export function AttendeesView({ document: { displayed } }: ViewProps) {
   }, [client])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchRegistrations()
 
     // Subscribe to live mutations on classRegistration documents

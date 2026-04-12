@@ -6,6 +6,13 @@ export const navbar = defineType({
   type: 'document',
   fields: [
     defineField({
+      name: 'logo',
+      title: 'Logo Image',
+      type: 'image',
+      description: 'Optional. Upload a logo image to replace the text brand name in the header.',
+      options: { hotspot: true },
+    }),
+    defineField({
       name: 'links',
       title: 'Nav Links',
       type: 'array',

@@ -71,9 +71,9 @@ export function ClassActions({
 
   useEffect(() => {
     if (open) {
-      dialogRef.current?.showModal()
+      dialogRef.current?.setAttribute('open', '')
     } else {
-      dialogRef.current?.close()
+      dialogRef.current?.removeAttribute('open')
     }
   }, [open])
 
@@ -188,8 +188,9 @@ export function ClassActions({
       <dialog
         ref={dialogRef}
         onClose={handleClose}
-        className="fixed z-50 inset-0 m-auto w-full max-w-md rounded-xl bg-background p-8 shadow-xl border border-outline-variant/20 backdrop:bg-transparent"
+        className="fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md pointer-events-none backdrop:bg-transparent"
       >
+        <div className="pointer-events-auto rounded-xl bg-background p-8 shadow-xl border border-outline-variant/20">
         {view === 'signup-form' && (
           <>
             <div className="flex items-start justify-between mb-6">
@@ -338,6 +339,7 @@ export function ClassActions({
             </button>
           </div>
         )}
+        </div>
       </dialog>
     </>
   )
