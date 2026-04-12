@@ -4,6 +4,7 @@ import type { TestimonialGrid as TestimonialGridType } from '@/types/sanity.gene
 
 type TestimonialItem = NonNullable<TestimonialGridType['testimonials']>[number]
 type TestimonialGridProps = Omit<TestimonialGridType, '_type'>
+type ImgItem = NonNullable<TestimonialItem['images']>[number]
 
 function StarRating({ count = 5 }: { count?: number }) {
   return (
@@ -32,9 +33,93 @@ function BodyParagraphs({ body, className }: { body: string; className?: string 
   )
 }
 
-// Layout 0: 5/12 text left + 7/12 stacked image grid right
+// Shared dynamic image grid — 1 fills space, 2–4 spaced evenly
+function TestimonialImageGrid({ imgs, className }: { imgs: ImgItem[]; className?: string }) {
+  const count = imgs.length
+
+  if (count === 1) {
+    return (
+      <div className={`w-full ${className ?? ''}`}>
+        <Image
+          src={urlFor(imgs[0].image!).url()}
+          alt={imgs[0].alt ?? ''}
+          width={0}
+          height={0}
+          sizes="(max-width: 1024px) 100vw, 50vw"
+          className="w-full h-auto rounded-xl"
+        />
+      </div>
+    )
+  }
+
+  if (count === 2) {
+    return (
+      <div className={`grid grid-cols-2 gap-4 h-full ${className ?? ''}`}>
+        {imgs.map((img, i) => (
+          <div key={i} className="relative aspect-[3/4] overflow-hidden rounded-xl">
+            <Image
+              src={urlFor(img.image!).url()}
+              alt={img.alt ?? ''}
+              fill
+              className="object-cover"
+              sizes="(max-width: 1024px) 50vw, 25vw"
+            />
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  if (count === 3) {
+    return (
+      <div className={`grid grid-cols-2 gap-4 ${className ?? ''}`}>
+        {/* Tall first image */}
+        <div className="row-span-2 relative aspect-[3/4] overflow-hidden rounded-xl">
+          <Image
+            src={urlFor(imgs[0].image!).url()}
+            alt={imgs[0].alt ?? ''}
+            fill
+            className="object-cover"
+            sizes="(max-width: 1024px) 50vw, 25vw"
+          />
+        </div>
+        {/* Two stacked on the right */}
+        {imgs.slice(1).map((img, i) => (
+          <div key={i} className="relative aspect-square overflow-hidden rounded-xl">
+            <Image
+              src={urlFor(img.image!).url()}
+              alt={img.alt ?? ''}
+              fill
+              className="object-cover"
+              sizes="(max-width: 1024px) 25vw, 12vw"
+            />
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  // 4 images: 2x2 grid
+  return (
+    <div className={`grid grid-cols-2 gap-4 ${className ?? ''}`}>
+      {imgs.map((img, i) => (
+        <div key={i} className="relative aspect-square overflow-hidden rounded-xl">
+          <Image
+            src={urlFor(img.image!).url()}
+            alt={img.alt ?? ''}
+            fill
+            className="object-cover"
+            sizes="(max-width: 1024px) 50vw, 25vw"
+          />
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// Layout 0: 5/12 text left + 7/12 image grid right
 function AsymmetricLayout({ item }: { item: TestimonialItem }) {
-  const imgs = item.images ?? []
+  const imgs = (item.images ?? []).filter((img) => img.image).slice(0, 4)
   return (
     <section className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
       {/* Text */}
@@ -61,46 +146,10 @@ function AsymmetricLayout({ item }: { item: TestimonialItem }) {
         </div>
       </div>
 
-      {/* Images — 2-col staggered grid */}
+      {/* Images */}
       {imgs.length > 0 && (
-        <div className="lg:col-span-7 grid grid-cols-2 gap-4 order-1 lg:order-2">
-          {/* Tall first image */}
-          {imgs[0]?.image && (
-            <div className="aspect-[3/4] overflow-hidden rounded-xl bg-surface-container-low relative">
-              <Image
-                src={urlFor(imgs[0].image).url()}
-                alt={imgs[0].alt ?? ''}
-                fill
-                className="object-cover grayscale-[20%] hover:scale-105 transition-transform duration-700"
-                sizes="(max-width: 1024px) 50vw, 30vw"
-              />
-            </div>
-          )}
-          {/* Right stacked column */}
-          <div className="space-y-4 pt-12">
-            {imgs[1]?.image && (
-              <div className="aspect-square overflow-hidden rounded-xl bg-surface-container-low relative">
-                <Image
-                  src={urlFor(imgs[1].image).url()}
-                  alt={imgs[1].alt ?? ''}
-                  fill
-                  className="object-cover hover:scale-105 transition-transform duration-700"
-                  sizes="(max-width: 1024px) 25vw, 15vw"
-                />
-              </div>
-            )}
-            {imgs[2]?.image && (
-              <div className="aspect-[4/5] overflow-hidden rounded-xl bg-surface-container-low relative">
-                <Image
-                  src={urlFor(imgs[2].image).url()}
-                  alt={imgs[2].alt ?? ''}
-                  fill
-                  className="object-cover hover:scale-105 transition-transform duration-700"
-                  sizes="(max-width: 1024px) 25vw, 15vw"
-                />
-              </div>
-            )}
-          </div>
+        <div className="lg:col-span-7 order-1 lg:order-2">
+          <TestimonialImageGrid imgs={imgs} />
         </div>
       )}
     </section>
@@ -109,7 +158,7 @@ function AsymmetricLayout({ item }: { item: TestimonialItem }) {
 
 // Layout 1: Centered editorial card on bg-surface-container-low
 function EditorialCardLayout({ item }: { item: TestimonialItem }) {
-  const imgs = item.images ?? []
+  const imgs = (item.images ?? []).filter((img) => img.image)
   const paragraphs = item.body ? item.body.split(/\n\n+/).filter(Boolean) : []
 
   return (
@@ -120,7 +169,7 @@ function EditorialCardLayout({ item }: { item: TestimonialItem }) {
       </div>
 
       <div className="relative z-10 text-center space-y-10">
-        {/* Avatar */}
+        {/* Avatar — only first image */}
         {imgs[0]?.image && (
           <div className="flex justify-center mb-6">
             <div className="w-24 h-24 rounded-full border-4 border-surface overflow-hidden shadow-md relative">
@@ -170,50 +219,14 @@ function EditorialCardLayout({ item }: { item: TestimonialItem }) {
 
 // Layout 2: Left image grid + right text
 function GalleryGridLayout({ item }: { item: TestimonialItem }) {
-  const imgs = item.images ?? []
+  const imgs = (item.images ?? []).filter((img) => img.image).slice(0, 4)
   const paragraphs = item.body ? item.body.split(/\n\n+/).filter(Boolean) : []
 
   return (
     <section className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-center">
-      {/* Image grid — 7/5 split */}
+      {/* Image grid */}
       {imgs.length > 0 && (
-        <div className="grid grid-cols-12 gap-4">
-          {imgs[0]?.image && (
-            <div className="col-span-7 aspect-[4/5] overflow-hidden rounded-2xl shadow-md relative">
-              <Image
-                src={urlFor(imgs[0].image).url()}
-                alt={imgs[0].alt ?? ''}
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 60vw, 30vw"
-              />
-            </div>
-          )}
-          <div className="col-span-5 flex flex-col gap-4">
-            {imgs[1]?.image && (
-              <div className="aspect-square overflow-hidden rounded-2xl shadow-md relative">
-                <Image
-                  src={urlFor(imgs[1].image).url()}
-                  alt={imgs[1].alt ?? ''}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 25vw, 12vw"
-                />
-              </div>
-            )}
-            {imgs[2]?.image && (
-              <div className="flex-1 min-h-[120px] overflow-hidden rounded-2xl shadow-md relative">
-                <Image
-                  src={urlFor(imgs[2].image).url()}
-                  alt={imgs[2].alt ?? ''}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 25vw, 12vw"
-                />
-              </div>
-            )}
-          </div>
-        </div>
+        <TestimonialImageGrid imgs={imgs} />
       )}
 
       {/* Text */}
@@ -256,16 +269,13 @@ export function TestimonialGrid({ testimonials }: TestimonialGridProps) {
 
   return (
     <div data-testid="testimonial-grid-section" className="space-y-20 md:space-y-40 px-8 max-w-screen-2xl mx-auto">
-      {testimonials.map((item, i) => {
-        const layout = i % 3
-        return (
-          <div key={item._key ?? i}>
-            {layout === 0 && <AsymmetricLayout item={item} />}
-            {layout === 1 && <EditorialCardLayout item={item} />}
-            {layout === 2 && <GalleryGridLayout item={item} />}
-          </div>
-        )
-      })}
+      {testimonials.map((item, i) => (
+        <div key={item._key ?? i}>
+          {(item.variant === 'asymmetric' || !item.variant) && <AsymmetricLayout item={item} />}
+          {item.variant === 'editorial' && <EditorialCardLayout item={item} />}
+          {item.variant === 'gallery' && <GalleryGridLayout item={item} />}
+        </div>
+      ))}
     </div>
   )
 }

@@ -113,6 +113,7 @@ await client.createOrReplace({
       },
       {
         _key: 'testimonial-2',
+        variant: 'editorial',
         rating: 5,
         quote: 'She helped me find a strength I didn\'t know I possessed.',
         body: `As a single mother by choice, I was terrified of the labor process without a traditional partner. Elena didn't just fill that gap; she became the bedrock of my support system. Her evidence-based approach calmed my anxieties, and her advocacy in the delivery room ensured my voice was always heard.\n\nPost-partum, her visits were a lifesaver. She helped me navigate breastfeeding challenges with so much patience and grace. I never felt judged, only nurtured. She truly lives up to the name 'The Mindful Doula'.`,
@@ -129,6 +130,7 @@ await client.createOrReplace({
       },
       {
         _key: 'testimonial-3',
+        variant: 'gallery',
         overline: 'Empowered Birth',
         rating: 5,
         quote: 'Finding Peace in the Unpredictable',

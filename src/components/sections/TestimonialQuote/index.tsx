@@ -11,7 +11,7 @@ export function TestimonialQuote({ quote, attribution, image, hasPillBackground 
           <div
             className="absolute inset-0 opacity-5 pointer-events-none"
             style={{
-              backgroundImage: 'radial-gradient(circle at 2px 2px, #6d5b45 1px, transparent 0)',
+              backgroundImage: 'radial-gradient(circle at 2px 2px, var(--color-primary) 1px, transparent 0)',
               backgroundSize: '32px 32px',
             }}
           />
