@@ -6,60 +6,57 @@ export const serviceCards = defineType({
   type: 'object',
   fields: [
     defineField({
-      name: 'services',
-      title: 'Services',
+      name: 'packages',
+      title: 'Packages',
       type: 'array',
       of: [
         {
           type: 'object',
           fields: [
-            defineField({ name: 'icon', title: 'Material Symbol Icon', type: 'string', description: 'e.g. child_care, home_health, menu_book' }),
-            defineField({ name: 'title', title: 'Title', type: 'string', validation: r => r.required() }),
-            defineField({ name: 'body', title: 'Body', type: 'text', rows: 3 }),
             defineField({
-              name: 'features',
-              title: 'Feature List',
-              type: 'array',
-              of: [{ type: 'string' }],
-              description: 'Checklist items (card 1) or bullet points (card 3)',
+              name: 'package',
+              title: 'Service Package',
+              type: 'reference',
+              to: [{ type: 'servicePackage' }],
+              validation: (r) => r.required(),
             }),
-            defineField({ name: 'pullQuote', title: 'Pull Quote', type: 'string', description: 'Short italic quote shown in a tonal card (card 2)' }),
-            defineField({ name: 'pricingLabel', title: 'Pricing Label', type: 'string', description: 'e.g. "Investment", "Hourly Rate"' }),
-            defineField({ name: 'pricing', title: 'Pricing', type: 'string', description: 'e.g. "Starting at $1,800", "$45 / Hour"' }),
-            defineField({ name: 'ctaLabel', title: 'CTA Label', type: 'string' }),
-            defineField({ name: 'ctaUrl', title: 'CTA URL', type: 'string' }),
-            defineField({ name: 'image', title: 'Image', type: 'imageWithAlt' }),
             defineField({
-              name: 'sessions',
-              title: 'Sessions',
-              type: 'array',
-              of: [{
-                type: 'object',
-                fields: [
-                  defineField({ name: 'duration', title: 'Duration', type: 'string', description: 'e.g. "90 min"' }),
-                  defineField({ name: 'label', title: 'Label', type: 'string', description: 'e.g. "Initial Consult"' }),
+              name: 'variant',
+              title: 'Card Layout',
+              type: 'string',
+              options: {
+                list: [
+                  { title: 'Featured (wide, image + checklist)', value: 'featured' },
+                  { title: 'Compact (narrow, pull quote)', value: 'compact' },
+                  { title: 'Highlighted (inverted, dark bg)', value: 'highlighted' },
+                  { title: 'Media (sessions grid + image)', value: 'media' },
                 ],
-                preview: {
-                  select: { title: 'duration', subtitle: 'label' },
-                  prepare: ({ title, subtitle }) => ({ title: title || 'Session', subtitle }),
-                },
-              }],
-              description: 'Session types shown in a 2-column grid (card 4)',
+                layout: 'radio',
+              },
+              initialValue: 'featured',
+              validation: (r) => r.required(),
             }),
           ],
           preview: {
-            select: { title: 'title', subtitle: 'pricing' },
-            prepare: ({ title, subtitle }) => ({ title: title || 'Service', subtitle }),
+            select: {
+              title: 'package.title',
+              subtitle: 'variant',
+            },
+            prepare: ({ title, subtitle }) => ({
+              title: title || 'Service Package',
+              subtitle: subtitle || 'featured',
+            }),
           },
         },
       ],
+      description: 'Add packages and choose a card layout for each.',
     }),
   ],
   preview: {
-    select: { services: 'services' },
-    prepare: ({ services }) => ({
+    select: { packages: 'packages' },
+    prepare: ({ packages }) => ({
       title: 'Service Cards',
-      subtitle: `${(services ?? []).length} services`,
+      subtitle: `${(packages ?? []).length} packages`,
     }),
   },
 })
