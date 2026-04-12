@@ -86,19 +86,22 @@ export const servicesPageQuery = `*[_type == "servicesPage"][0]{
     compact
   },
   serviceCards{
-    services[]{
+    packages[]{
       _key,
-      icon,
-      title,
-      body,
-      features[],
-      pullQuote,
-      pricingLabel,
-      pricing,
-      ctaLabel,
-      ctaUrl,
-      image ${imageProjection},
-      sessions[]{ _key, duration, label }
+      variant,
+      "package": package->{
+        _id,
+        title,
+        slug,
+        icon,
+        summary,
+        pullQuote,
+        features[],
+        pricingLabel,
+        pricing,
+        heroImage ${imageProjection},
+        sessions[]{ _key, duration, label }
+      }
     }
   },
   faq{
@@ -145,6 +148,7 @@ export const testimonialsPageQuery = `*[_type == "testimonialsPage"][0]{
   testimonialGrid{
     testimonials[]{
       _key,
+      variant,
       overline,
       rating,
       quote,
@@ -184,7 +188,7 @@ export const contactPageQuery = `*[_type == "contactPage"][0]{
 
 // ── Navbar & Footer (fetched in site layout) ───────────────────────────────
 export const navbarQuery = `*[_type == "navbar"][0]{
-  logo,
+  logo{ asset->{ _id, url, metadata{ dimensions } }, hotspot, crop },
   links[]{ label, url },
   cta{ label, url, style, newTab }
 }`
@@ -223,11 +227,44 @@ export const postBySlugQuery = `*[_type == "post" && slug.current == $slug][0]{
 // can group them and build a counts map (classKey → count).
 export const activeRegistrationsQuery = `*[_type == "classRegistration" && classKey in $keys && status == "active"]{ classKey }`
 
+// ── Service Packages ──────────────────────────────────────────────────────
+export const allServicePackageSlugsQuery = `*[_type == "servicePackage"].slug.current`
+
+export const servicePackageBySlugQuery = `*[_type == "servicePackage" && slug.current == $slug][0]{
+  title,
+  slug,
+  icon,
+  tagline,
+  heroImage ${imageProjection},
+  description,
+  features[],
+  pricingLabel,
+  pricing,
+  sessions[]{ _key, duration, label },
+  ctaLabel,
+  seo
+}`
+
 // ── Site settings ──────────────────────────────────────────────────────────
 export const siteSettingsQuery = `*[_type == "siteSettings"][0]{
   siteName,
   siteDescription,
   ogImage,
   socials,
+  contactEmail,
   analyticsId
 }`
+
+// ── Site theme ─────────────────────────────────────────────────────────────
+export const siteThemeQuery = `*[_type == "siteTheme"][0]{
+  "colorPrimary": colorPrimary.hex,
+  "colorPrimaryHover": colorPrimaryHover.hex,
+  "colorPrimaryForeground": colorPrimaryForeground.hex,
+  "colorBackground": colorBackground.hex,
+  "colorSurface": colorSurface.hex,
+  "colorForeground": colorForeground.hex,
+  "colorMuted": colorMuted.hex,
+  "colorBorder": colorBorder.hex
+}`
+
+export const contactEmailQuery = `*[_type == "siteSettings"][0].contactEmail`

@@ -15,6 +15,7 @@
     "seed:classes": "node scripts/seed-classes.mjs",
     "seed:testimonials": "node scripts/seed-testimonials.mjs",
     "seed:contact": "node scripts/seed-contact.mjs",
+    "seed:service-packages": "node scripts/seed-service-packages.mjs",
     "test:visual": "playwright test tests/visual tests/structural",
     "test:visual:update": "playwright test tests/visual tests/structural --update-snapshots",
     "test:visual:ui": "playwright test tests/visual tests/structural --ui",
@@ -24,6 +25,7 @@
   },
   "dependencies": {
     "@portabletext/react": "^3.2.0",
+    "@sanity/color-input": "^6.0.4",
     "@sanity/image-url": "^1.2.0",
     "@sanity/presentation": "^2.0.0",
     "@sanity/preview-url-secret": "^4.0.4",
@@ -36,15 +38,19 @@
     "react-is": "^19.2.4",
     "resend": "^6.10.0",
     "sanity": "^3.99.0",
+    "sanity-plugin-asset-source-unsplash": "^3.1.0",
     "styled-components": "^6.3.12",
     "zod": "^3.23.0"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.5",
     "@playwright/test": "^1.59.1",
     "@tailwindcss/postcss": "^4.0.0",
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^16.2.3",
     "postcss": "^8.4.0",
     "tailwindcss": "^4.0.0",
     "typescript": "^5.7.0"
