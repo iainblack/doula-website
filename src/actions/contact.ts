@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { Resend } from 'resend'
 import { client } from '@/lib/sanity/client'
 import { contactEmailQuery } from '@/lib/sanity/queries'
+import { buildContactNotificationEmail } from '@/lib/email/template'
 
 const ContactSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -50,12 +51,7 @@ export async function submitContactForm(formData: FormData): Promise<ContactResu
     replyTo: email,
     subject: subjectLine,
     text: `From: ${name} (${email})\n${subject ? `Subject: ${subject}\n` : ''}\n${message}`,
-    html: `
-      <p><strong>From:</strong> ${name} (<a href="mailto:${email}">${email}</a>)</p>
-      ${subject ? `<p><strong>Subject:</strong> ${subject}</p>` : ''}
-      <p><strong>Message:</strong></p>
-      <p style="white-space:pre-wrap">${message}</p>
-    `,
+    html: buildContactNotificationEmail({ name, email, subject, message }),
   })
 
   if (error) {

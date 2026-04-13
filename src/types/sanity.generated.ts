@@ -139,82 +139,6 @@ export type ClassRegistration = {
   createdAt?: string;
 };
 
-export type Post = {
-  _id: string;
-  _type: "post";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title: string;
-  slug: Slug;
-  excerpt?: string;
-  coverImage?: ImageWithAlt;
-  author?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "author";
-  };
-  publishedAt?: string;
-  categories?: Array<string>;
-  body: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "normal" | "h2" | "h3" | "h4" | "blockquote";
-    listItem?: "bullet" | "number";
-    markDefs?: Array<{
-      href?: string;
-      _type: "link";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  } | {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    caption?: string;
-    _type: "image";
-    _key: string;
-  }>;
-  seo?: Seo;
-};
-
-export type Author = {
-  _id: string;
-  _type: "author";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  name: string;
-  slug?: Slug;
-  image?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
-  bio?: string;
-};
-
 export type ContactPage = {
   _id: string;
   _type: "contactPage";
@@ -283,7 +207,6 @@ export type HomePage = {
   _updatedAt: string;
   _rev: string;
   hero?: Hero;
-  imageGallery?: ImageGallery;
   editorialBlock?: EditorialBlock;
   featureGrid?: FeatureGrid;
   testimonialQuote?: TestimonialQuote;
@@ -465,6 +388,16 @@ export type Certifications = {
     icon?: string;
     title: string;
     description?: string;
+    certFile?: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.fileAsset";
+      };
+      media?: unknown;
+      _type: "file";
+    };
     certUrl?: string;
     _type: "certificationItem";
     _key: string;
@@ -516,13 +449,6 @@ export type EditorialBlock = {
   highlightText?: string;
   pullQuote?: string;
   image?: ImageWithAlt;
-};
-
-export type ImageGallery = {
-  _type: "imageGallery";
-  images: Array<{
-    _key: string;
-  } & ImageWithAlt>;
 };
 
 export type Hero = {
@@ -765,5 +691,5 @@ export type SanityAssetSourceData = {
   url?: string;
 };
 
-export type AllSanitySchemaTypes = SiteTheme | SiteSettings | Footer | Navbar | EmailBlast | Subscriber | ClassRegistration | Post | Author | ContactPage | TestimonialsPage | ClassesPage | ServicesPage | AboutPage | HomePage | ContactForm | ContactDetail | TestimonialsCtaBanner | TestimonialGrid | NewsletterSignup | ClassList | Faq | ServiceCards | ServicePackage | CtaBanner | Certifications | Philosophy | HeroAbout | TestimonialQuote | FeatureGrid | EditorialBlock | ImageGallery | Hero | PortableTextBlock | ImageWithAlt | Seo | Cta | Color | RgbaColor | HsvaColor | HslaColor | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
+export type AllSanitySchemaTypes = SiteTheme | SiteSettings | Footer | Navbar | EmailBlast | Subscriber | ClassRegistration | ContactPage | TestimonialsPage | ClassesPage | ServicesPage | AboutPage | HomePage | ContactForm | ContactDetail | TestimonialsCtaBanner | TestimonialGrid | NewsletterSignup | ClassList | Faq | ServiceCards | ServicePackage | CtaBanner | Certifications | Philosophy | HeroAbout | TestimonialQuote | FeatureGrid | EditorialBlock | Hero | PortableTextBlock | ImageWithAlt | Seo | Cta | Color | RgbaColor | HsvaColor | HslaColor | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;

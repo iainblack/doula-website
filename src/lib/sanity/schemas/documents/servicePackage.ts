@@ -1,4 +1,5 @@
 import { defineType, defineField } from 'sanity'
+import { MaterialIconPicker } from '../../../../sanity/components/MaterialIconPicker'
 
 export const servicePackage = defineType({
   name: 'servicePackage',
@@ -10,6 +11,24 @@ export const servicePackage = defineType({
     { name: 'seo', title: 'SEO' },
   ],
   fields: [
+    defineField({
+      name: 'variant',
+      title: 'Card Layout',
+      type: 'string',
+      group: 'content',
+      options: {
+        list: [
+          { title: 'Featured (wide, image + checklist)', value: 'featured' },
+          { title: 'Compact (narrow, pull quote)', value: 'compact' },
+          { title: 'Highlighted (inverted, dark bg)', value: 'highlighted' },
+          { title: 'Media (sessions grid + image)', value: 'media' },
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'featured',
+      description: 'Controls how this package appears on the Services page.',
+      validation: (r) => r.required(),
+    }),
     defineField({
       name: 'title',
       title: 'Title',
@@ -30,7 +49,7 @@ export const servicePackage = defineType({
       title: 'Icon',
       type: 'string',
       group: 'content',
-      description: 'Optional. Enter a Material Symbols icon name, e.g. child_care, favorite, home_health. Browse icons at fonts.google.com/icons',
+      components: { input: MaterialIconPicker },
     }),
     defineField({
       name: 'tagline',

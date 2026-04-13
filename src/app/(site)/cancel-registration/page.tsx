@@ -1,27 +1,25 @@
 import Link from 'next/link'
-import { cancelRegistration } from '@/actions/classRegistration'
 
 type Props = {
-  searchParams: Promise<{ token?: string }>
+  searchParams: Promise<{ success?: string; error?: string }>
 }
 
 export default async function CancelRegistrationPage({ searchParams }: Props) {
-  const { token } = await searchParams
+  const { success, error } = await searchParams
 
-  if (!token) {
-    return <CancelPage success={false} message="This cancellation link is invalid or has expired." />
-  }
-
-  const result = await cancelRegistration(token)
-
-  if ('error' in result) {
-    return <CancelPage success={false} message={result.error} />
+  if (success) {
+    return (
+      <CancelPage
+        success
+        message="Your reservation has been cancelled. We hope to see you at a future class."
+      />
+    )
   }
 
   return (
     <CancelPage
-      success
-      message="Your reservation has been cancelled. We hope to see you at a future class."
+      success={false}
+      message={error ?? 'This cancellation link is invalid or has expired.'}
     />
   )
 }

@@ -11,6 +11,7 @@ export function ContactForm({ heading, buttonLabel, subjectOptions }: ContactFor
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [subjectSelected, setSubjectSelected] = useState(false)
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -71,7 +72,7 @@ export function ContactForm({ heading, buttonLabel, subjectOptions }: ContactFor
                 type="text"
                 placeholder="Your full name"
                 required
-                className="w-full bg-transparent border-b border-outline-variant/30 focus:border-primary focus:ring-0 focus:outline-none transition-all py-3 px-0 font-body placeholder:text-outline-variant/60"
+                className="w-full bg-transparent border-b border-outline-variant/30 focus:border-primary focus:ring-0 focus:outline-none transition-all py-3 px-0 font-body placeholder:text-muted/60"
               />
             </div>
 
@@ -89,7 +90,7 @@ export function ContactForm({ heading, buttonLabel, subjectOptions }: ContactFor
                 type="email"
                 placeholder="email@example.com"
                 required
-                className="w-full bg-transparent border-b border-outline-variant/30 focus:border-primary focus:ring-0 focus:outline-none transition-all py-3 px-0 font-body placeholder:text-outline-variant/60"
+                className="w-full bg-transparent border-b border-outline-variant/30 focus:border-primary focus:ring-0 focus:outline-none transition-all py-3 px-0 font-body placeholder:text-muted/60"
               />
             </div>
 
@@ -105,7 +106,8 @@ export function ContactForm({ heading, buttonLabel, subjectOptions }: ContactFor
                 <select
                   id="subject"
                   name="subject"
-                  className="w-full bg-transparent border-b border-outline-variant/30 focus:border-primary focus:ring-0 focus:outline-none transition-all py-3 px-0 font-body text-muted"
+                  onChange={(e) => setSubjectSelected(e.target.value !== '')}
+                  className={`w-full bg-transparent border-b border-outline-variant/30 focus:border-primary focus:ring-0 focus:outline-none transition-all py-3 px-0 font-body ${subjectSelected ? 'text-foreground' : 'text-muted/60'}`}
                 >
                   <option value="">Select a topic...</option>
                   {subjectOptions.map((opt, i) => (
@@ -131,7 +133,7 @@ export function ContactForm({ heading, buttonLabel, subjectOptions }: ContactFor
                 placeholder="Tell me a bit about your journey..."
                 rows={4}
                 required
-                className="w-full bg-transparent border-b border-outline-variant/30 focus:border-primary focus:ring-0 focus:outline-none transition-all py-3 px-0 font-body placeholder:text-outline-variant/60 resize-none"
+                className="w-full bg-transparent border-b border-outline-variant/30 focus:border-primary focus:ring-0 focus:outline-none transition-all py-3 px-0 font-body placeholder:text-muted/60 resize-none"
               />
             </div>
 

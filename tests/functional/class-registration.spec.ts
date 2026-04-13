@@ -216,7 +216,7 @@ test.describe('Cancel reservation flow', () => {
     await page.locator(`[data-class-key="${classKey}"]`).getByRole('button', { name: 'Cancel reservation' }).click()
     const dialog = page.getByRole('dialog')
     await expect(dialog).toBeVisible()
-    await expect(dialog.getByText('Cancel your spot?')).toBeVisible()
+    await expect(dialog.getByText('Cancel your reservation?')).toBeVisible()
     await expect(dialog.getByRole('button', { name: 'Keep my spot' })).toBeVisible()
     await expect(dialog.getByRole('button', { name: 'Yes, cancel' })).toBeVisible()
   })

@@ -1,4 +1,5 @@
 import { defineType, defineField } from 'sanity'
+import { MaterialIconPicker } from '../../../sanity/components/MaterialIconPicker'
 
 export const featureGrid = defineType({
   name: 'featureGrid',
@@ -29,7 +30,7 @@ export const featureGrid = defineType({
               name: 'icon',
               title: 'Icon',
               type: 'string',
-              description: 'Optional. Enter a Material Symbols icon name, e.g. child_care, favorite, home_health. Browse icons at fonts.google.com/icons',
+              components: { input: MaterialIconPicker },
             }),
             defineField({ name: 'title', title: 'Title', type: 'string', validation: r => r.required().max(80) }),
             defineField({

@@ -30,17 +30,20 @@ export function Certifications({ heading, subheading, items }: CertificationsTyp
                   {cert.description}
                 </p>
               )}
-              {cert.certUrl && (
-                <a
-                  href={cert.certUrl}
-                  className="inline-flex items-center gap-2 text-primary font-semibold text-sm hover:underline font-body"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <span className="material-symbols-outlined text-sm">picture_as_pdf</span>
-                  View Certificate
-                </a>
-              )}
+              {(() => {
+                const href = (cert.certFile?.asset as { url?: string } | undefined)?.url ?? cert.certUrl
+                return href ? (
+                  <a
+                    href={href}
+                    className="inline-flex items-center gap-2 text-primary font-semibold text-sm hover:underline font-body"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span className="material-symbols-outlined text-sm">picture_as_pdf</span>
+                    View Certificate
+                  </a>
+                ) : null
+              })()}
             </div>
           ))}
         </div>

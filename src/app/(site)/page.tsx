@@ -2,7 +2,6 @@ import { urlFor } from '@/lib/sanity/client'
 import { sanityFetch } from '@/lib/sanity/fetch'
 import { homePageQuery } from '@/lib/sanity/queries'
 import { Hero } from '@/components/sections/Hero'
-import { ImageGallery } from '@/components/sections/ImageGallery'
 import { EditorialBlock } from '@/components/sections/EditorialBlock'
 import { FeatureGrid } from '@/components/sections/FeatureGrid'
 import { TestimonialQuote } from '@/components/sections/TestimonialQuote'
@@ -50,7 +49,6 @@ export default async function HomePage() {
   return (
     <>
       {page.hero && <Hero {...page.hero} />}
-      {page.imageGallery && <ImageGallery {...page.imageGallery} />}
       {page.editorialBlock && <EditorialBlock {...page.editorialBlock} />}
       {page.featureGrid && <FeatureGrid {...page.featureGrid} />}
       {page.testimonialQuote && <TestimonialQuote {...page.testimonialQuote} />}

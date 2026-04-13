@@ -29,7 +29,6 @@ export const page = defineType({
       type: 'array',
       of: [
         { type: 'hero' },
-        { type: 'imageGallery' },
         { type: 'editorialBlock' },
         { type: 'featureGrid' },
         { type: 'testimonialQuote' },

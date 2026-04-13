@@ -2,7 +2,7 @@
 
 import { useRef, useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { registerForClass, cancelRegistration } from '@/actions/classRegistration'
+import { registerForClass, cancelRegistration, checkRegistrationActive } from '@/actions/classRegistration'
 
 // localStorage schema: { [classKey]: cancelToken }
 // Key present with a string value → user is registered
@@ -64,9 +64,19 @@ export function ClassActions({
   const dialogRef = useRef<HTMLDialogElement>(null)
   const router = useRouter()
 
-  // Read localStorage once on mount (client-only)
+  // Read localStorage on mount, then verify the token is still active server-side.
+  // This handles the case where the user cancelled via the email link — the token
+  // in localStorage is stale and the cancel button should not show.
   useEffect(() => {
-    setIsRegistered(readToken(classKey) !== null)
+    const token = readToken(classKey)
+    if (!token) {
+      setIsRegistered(false)
+      return
+    }
+    checkRegistrationActive(classKey, token).then(active => {
+      if (!active) clearToken(classKey)
+      setIsRegistered(active)
+    })
   }, [classKey])
 
   useEffect(() => {
@@ -282,7 +292,7 @@ export function ClassActions({
         {view === 'cancel-confirm' && (
           <div className="text-center py-4">
             <span className="material-symbols-outlined text-4xl text-muted mb-4 block">help</span>
-            <h2 className="font-heading text-2xl mb-2">Cancel your spot?</h2>
+            <h2 className="font-heading text-2xl mb-2">Cancel your reservation?</h2>
             <p className="text-muted font-body mb-6">
               This will release your spot in <strong>{className}</strong>. This cannot be undone.
             </p>

@@ -1,9 +1,15 @@
 import Image from 'next/image'
-import Link from 'next/link'
 import { urlFor } from '@/lib/sanity/client'
 import type { ContactDetail as ContactDetailType } from '@/types/sanity.generated'
 
 type ContactDetailProps = Omit<ContactDetailType, '_type'>
+
+function resolveHref(url: string): string {
+  if (/^(https?|mailto|tel):/.test(url)) return url
+  if (url.includes('@')) return `mailto:${url}`
+  if (/^[\d\s+\-().]+$/.test(url)) return `tel:${url}`
+  return url
+}
 
 function HeadingWithEmphasis({ heading, emphasis }: { heading: string; emphasis?: string }) {
   if (!emphasis) return <>{heading}</>
@@ -64,12 +70,12 @@ export function ContactDetail({
                       </p>
                     )}
                     {method.value && method.url ? (
-                      <Link
-                        href={method.url}
+                      <a
+                        href={resolveHref(method.url)}
                         className="font-body text-lg text-foreground hover:text-primary transition-colors"
                       >
                         {method.value}
-                      </Link>
+                      </a>
                     ) : method.value ? (
                       <p className="font-body text-lg text-foreground">{method.value}</p>
                     ) : null}

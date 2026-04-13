@@ -16,6 +16,7 @@
     "seed:testimonials": "node scripts/seed-testimonials.mjs",
     "seed:contact": "node scripts/seed-contact.mjs",
     "seed:service-packages": "node scripts/seed-service-packages.mjs",
+    "seed:theme": "node scripts/seed-theme.mjs",
     "test:visual": "playwright test tests/visual tests/structural",
     "test:visual:update": "playwright test tests/visual tests/structural --update-snapshots",
     "test:visual:ui": "playwright test tests/visual tests/structural --ui",

@@ -15,9 +15,6 @@ export const homePageQuery = `*[_type == "homePage"][0]{
     primaryCta{ label, url, style, newTab },
     secondaryCta{ label, url, style, newTab }
   },
-  imageGallery{
-    images[]${imageProjection}
-  },
   editorialBlock{
     heading,
     body,
@@ -56,7 +53,7 @@ export const aboutPageQuery = `*[_type == "aboutPage"][0]{
   certifications{
     heading,
     subheading,
-    items[]{ icon, title, description, certUrl }
+    items[]{ icon, title, description, certFile{ asset->{ _id, url } }, certUrl }
   },
   testimonialQuote{
     quote,
@@ -88,7 +85,6 @@ export const servicesPageQuery = `*[_type == "servicesPage"][0]{
   serviceCards{
     packages[]{
       _key,
-      variant,
       "package": package->{
         _id,
         title,
@@ -99,6 +95,7 @@ export const servicesPageQuery = `*[_type == "servicesPage"][0]{
         features[],
         pricingLabel,
         pricing,
+        variant,
         heroImage ${imageProjection},
         sessions[]{ _key, duration, label }
       }
@@ -196,30 +193,6 @@ export const navbarQuery = `*[_type == "navbar"][0]{
 export const footerQuery = `*[_type == "footer"][0]{
   links[]{ label, url },
   copyright
-}`
-
-// ── Blog ───────────────────────────────────────────────────────────────────
-export const allPostSlugsQuery = `*[_type == "post"].slug.current`
-
-export const allPostsQuery = `*[_type == "post"] | order(publishedAt desc){
-  title,
-  slug,
-  excerpt,
-  coverImage,
-  publishedAt,
-  author->{ name }
-}`
-
-export const postBySlugQuery = `*[_type == "post" && slug.current == $slug][0]{
-  title,
-  slug,
-  excerpt,
-  coverImage,
-  author->{ name, image },
-  publishedAt,
-  categories,
-  body,
-  seo
 }`
 
 // ── Class Registrations ────────────────────────────────────────────────────

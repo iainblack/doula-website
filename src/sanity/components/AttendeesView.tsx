@@ -1,5 +1,16 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useClient } from 'sanity'
+import {
+  Box,
+  Card,
+  Stack,
+  Flex,
+  Text,
+  Heading,
+  Badge,
+  Spinner,
+} from '@sanity/ui'
+import { ChevronDownIcon } from '@sanity/icons'
 
 type Registration = {
   _id: string
@@ -48,7 +59,6 @@ export function AttendeesView({ document: { displayed } }: ViewProps) {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchRegistrations()
 
-    // Subscribe to live mutations on classRegistration documents
     const subscription = client
       .listen('*[_type == "classRegistration"]')
       .subscribe(() => fetchRegistrations())
@@ -58,106 +68,174 @@ export function AttendeesView({ document: { displayed } }: ViewProps) {
 
   if (!classes.length) {
     return (
-      <div style={styles.empty}>
-        <p style={styles.emptyText}>No classes defined yet. Add classes in the Editor tab first.</p>
-      </div>
+      <Box padding={5}>
+        <Text muted size={1}>
+          No classes defined yet. Add classes in the Editor tab first.
+        </Text>
+      </Box>
     )
   }
 
   return (
-    <div style={styles.container}>
-      <h2 style={styles.pageTitle}>Attendees</h2>
-      {loading ? (
-        <p style={styles.loadingText}>Loading…</p>
-      ) : (
-        <div style={styles.stack}>
-          {classes.map((cls) => {
-            const classRegs = registrations.filter((r) => r.classKey === cls._key)
-            const active = classRegs.filter((r) => r.status === 'active')
-            const cancelled = classRegs.filter((r) => r.status === 'cancelled')
-            const limit = cls.attendeeLimit ?? null
-            const spotsLeft = limit !== null ? limit - active.length : null
-            const isFull = spotsLeft !== null && spotsLeft <= 0
+    <Box padding={5} style={{ maxWidth: 800 }}>
+      <Stack space={5}>
+        <Heading size={2}>Attendees</Heading>
 
-            return (
-              <div key={cls._key} style={styles.card}>
-                {/* Class header */}
-                <div style={styles.cardHeader}>
-                  <div>
-                    <h3 style={styles.className}>{cls.title ?? 'Untitled Class'}</h3>
-                    {cls.date && <p style={styles.classDate}>{cls.date}</p>}
-                  </div>
-                  <div style={styles.badgeGroup}>
-                    <span style={{ ...styles.badge, ...(isFull ? styles.badgeFull : styles.badgeOpen) }}>
-                      {isFull ? 'Full' : 'Open'}
-                    </span>
-                    <span style={styles.countBadge}>
-                      {limit !== null
-                        ? `${active.length} / ${limit} registered`
-                        : `${active.length} registered`}
-                    </span>
-                  </div>
-                </div>
+        {loading ? (
+          <Flex align="center" gap={2}>
+            <Spinner muted />
+            <Text muted size={1}>Loading…</Text>
+          </Flex>
+        ) : (
+          <Stack space={4}>
+            {classes.map((cls) => {
+              const classRegs = registrations.filter((r) => r.classKey === cls._key)
+              const active = classRegs.filter((r) => r.status === 'active')
+              const cancelled = classRegs.filter((r) => r.status === 'cancelled')
+              const limit = cls.attendeeLimit ?? null
+              const spotsLeft = limit !== null ? limit - active.length : null
+              const isFull = spotsLeft !== null && spotsLeft <= 0
 
-                {/* Active registrations */}
-                {active.length > 0 ? (
-                  <table style={styles.table}>
-                    <thead>
-                      <tr>
-                        <th style={styles.th}>Name</th>
-                        <th style={styles.th}>Email</th>
-                        <th style={{ ...styles.th, ...styles.thRight }}>Registered</th>
-                      </tr>
-                    </thead>
-                    <tbody>
+              return (
+                <Card key={cls._key} border radius={2} overflow="hidden">
+                  {/* Class header */}
+                  <Card tone="transparent" padding={4} borderBottom>
+                    <Flex align="flex-start" justify="space-between" gap={4}>
+                      <Stack space={2}>
+                        <Text size={2} weight="semibold">
+                          {cls.title ?? 'Untitled Class'}
+                        </Text>
+                        {cls.date && (
+                          <Text size={1} muted>
+                            {cls.date}
+                          </Text>
+                        )}
+                      </Stack>
+                      <Flex align="center" gap={3} style={{ flexShrink: 0 }}>
+                        <Badge
+                          tone={isFull ? 'critical' : 'positive'}
+                          radius={6}
+                          fontSize={0}
+                        >
+                          {isFull ? 'Full' : 'Open'}
+                        </Badge>
+                        <Text size={1} muted style={{ whiteSpace: 'nowrap' }}>
+                          {limit !== null
+                            ? `${active.length} / ${limit} registered`
+                            : `${active.length} registered`}
+                        </Text>
+                      </Flex>
+                    </Flex>
+                  </Card>
+
+                  {/* Active registrations */}
+                  {active.length > 0 ? (
+                    <Box>
+                      {/* Table header */}
+                      <Box
+                        paddingX={4}
+                        paddingY={3}
+                        style={{ borderBottom: '1px solid var(--card-border-color)' }}
+                      >
+                        <Flex gap={4}>
+                          <Box style={{ flex: '1 1 180px' }}>
+                            <Text size={0} weight="semibold" muted style={{ textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                              Name
+                            </Text>
+                          </Box>
+                          <Box style={{ flex: '1 1 220px' }}>
+                            <Text size={0} weight="semibold" muted style={{ textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                              Email
+                            </Text>
+                          </Box>
+                          <Box style={{ flex: '0 0 120px', textAlign: 'right' }}>
+                            <Text size={0} weight="semibold" muted style={{ textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                              Registered
+                            </Text>
+                          </Box>
+                        </Flex>
+                      </Box>
+
+                      {/* Rows */}
                       {active.map((reg) => (
-                        <tr key={reg._id} style={styles.tr}>
-                          <td style={styles.td}>{reg.name}</td>
-                          <td style={{ ...styles.td, ...styles.tdMuted }}>
-                            <a href={`mailto:${reg.email}`} style={styles.emailLink}>
-                              {reg.email}
-                            </a>
-                          </td>
-                          <td style={{ ...styles.td, ...styles.tdMuted, ...styles.tdRight }}>
-                            {formatDate(reg.createdAt)}
-                          </td>
-                        </tr>
+                        <Box
+                          key={reg._id}
+                          paddingX={4}
+                          paddingY={3}
+                          style={{ borderBottom: '1px solid var(--card-border-color)' }}
+                        >
+                          <Flex gap={4} align="center">
+                            <Box style={{ flex: '1 1 180px' }}>
+                              <Text size={1}>{reg.name}</Text>
+                            </Box>
+                            <Box style={{ flex: '1 1 220px' }}>
+                              <Text size={1} muted>
+                                <a
+                                  href={`mailto:${reg.email}`}
+                                  style={{ color: 'inherit', textDecoration: 'none' }}
+                                >
+                                  {reg.email}
+                                </a>
+                              </Text>
+                            </Box>
+                            <Box style={{ flex: '0 0 120px', textAlign: 'right' }}>
+                              <Text size={1} muted style={{ whiteSpace: 'nowrap' }}>
+                                {formatDate(reg.createdAt)}
+                              </Text>
+                            </Box>
+                          </Flex>
+                        </Box>
                       ))}
-                    </tbody>
-                  </table>
-                ) : (
-                  <p style={styles.emptyClassText}>No active registrations yet.</p>
-                )}
+                    </Box>
+                  ) : (
+                    <Box padding={4}>
+                      <Text size={1} muted>
+                        No active registrations yet.
+                      </Text>
+                    </Box>
+                  )}
 
-                {/* Cancelled registrations — collapsed by default */}
-                {cancelled.length > 0 && (
-                  <details style={styles.cancelled}>
-                    <summary style={styles.cancelledSummary}>
-                      {cancelled.length} cancelled registration{cancelled.length !== 1 ? 's' : ''}
-                    </summary>
-                    <table style={{ ...styles.table, marginTop: 8 }}>
-                      <tbody>
-                        {cancelled.map((reg) => (
-                          <tr key={reg._id} style={styles.tr}>
-                            <td style={{ ...styles.td, ...styles.tdStrike }}>{reg.name}</td>
-                            <td style={{ ...styles.td, ...styles.tdMuted, ...styles.tdStrike }}>
-                              {reg.email}
-                            </td>
-                            <td style={{ ...styles.td, ...styles.tdMuted, ...styles.tdRight }}>
-                              {formatDate(reg.createdAt)}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </details>
-                )}
-              </div>
-            )
-          })}
-        </div>
-      )}
-    </div>
+                  {/* Cancelled registrations */}
+                  {cancelled.length > 0 && (
+                    <Box padding={4} style={{ borderTop: '1px solid var(--card-border-color)' }}>
+                      <details>
+                        <summary style={{ cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
+                          <ChevronDownIcon style={{ color: 'var(--card-muted-fg-color)', fontSize: 16, flexShrink: 0 }} />
+                          <Text size={1} muted>
+                            {cancelled.length} cancelled registration{cancelled.length !== 1 ? 's' : ''}
+                          </Text>
+                        </summary>
+                        <Stack space={2} marginTop={3}>
+                          {cancelled.map((reg) => (
+                            <Flex key={reg._id} gap={4} align="center">
+                              <Box style={{ flex: '1 1 180px' }}>
+                                <Text size={1} muted style={{ textDecoration: 'line-through' }}>
+                                  {reg.name}
+                                </Text>
+                              </Box>
+                              <Box style={{ flex: '1 1 220px' }}>
+                                <Text size={1} muted style={{ textDecoration: 'line-through' }}>
+                                  {reg.email}
+                                </Text>
+                              </Box>
+                              <Box style={{ flex: '0 0 120px', textAlign: 'right' }}>
+                                <Text size={1} muted style={{ whiteSpace: 'nowrap' }}>
+                                  {formatDate(reg.createdAt)}
+                                </Text>
+                              </Box>
+                            </Flex>
+                          ))}
+                        </Stack>
+                      </details>
+                    </Box>
+                  )}
+                </Card>
+              )
+            })}
+          </Stack>
+        )}
+      </Stack>
+    </Box>
   )
 }
 
@@ -168,145 +246,4 @@ function formatDate(iso: string): string {
     day: 'numeric',
     year: 'numeric',
   })
-}
-
-// Inline styles — no Tailwind in Studio components
-const styles: Record<string, React.CSSProperties> = {
-  container: {
-    padding: '32px',
-    maxWidth: '800px',
-    fontFamily: 'system-ui, sans-serif',
-  },
-  pageTitle: {
-    fontSize: '20px',
-    fontWeight: 600,
-    color: '#101112',
-    marginBottom: '24px',
-  },
-  stack: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '20px',
-  },
-  card: {
-    border: '1px solid #e6e8eb',
-    borderRadius: '8px',
-    overflow: 'hidden',
-    background: '#fff',
-  },
-  cardHeader: {
-    display: 'flex',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    padding: '16px 20px',
-    borderBottom: '1px solid #e6e8eb',
-    background: '#f8f9fa',
-    gap: '12px',
-  },
-  className: {
-    fontSize: '15px',
-    fontWeight: 600,
-    color: '#101112',
-    margin: 0,
-  },
-  classDate: {
-    fontSize: '13px',
-    color: '#6e7781',
-    margin: '2px 0 0',
-  },
-  badgeGroup: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    flexShrink: 0,
-  },
-  badge: {
-    fontSize: '11px',
-    fontWeight: 600,
-    padding: '2px 8px',
-    borderRadius: '99px',
-    letterSpacing: '0.04em',
-    textTransform: 'uppercase',
-  },
-  badgeOpen: {
-    background: '#d1fae5',
-    color: '#065f46',
-  },
-  badgeFull: {
-    background: '#fee2e2',
-    color: '#991b1b',
-  },
-  countBadge: {
-    fontSize: '13px',
-    color: '#6e7781',
-    whiteSpace: 'nowrap',
-  },
-  table: {
-    width: '100%',
-    borderCollapse: 'collapse',
-  },
-  th: {
-    padding: '10px 20px',
-    fontSize: '12px',
-    fontWeight: 600,
-    color: '#6e7781',
-    textAlign: 'left',
-    borderBottom: '1px solid #e6e8eb',
-    letterSpacing: '0.04em',
-    textTransform: 'uppercase',
-  },
-  thRight: {
-    textAlign: 'right',
-  },
-  tr: {
-    borderBottom: '1px solid #f3f4f6',
-  },
-  td: {
-    padding: '12px 20px',
-    fontSize: '14px',
-    color: '#101112',
-    verticalAlign: 'middle',
-  },
-  tdMuted: {
-    color: '#6e7781',
-  },
-  tdRight: {
-    textAlign: 'right',
-    whiteSpace: 'nowrap',
-  },
-  tdStrike: {
-    textDecoration: 'line-through',
-    opacity: 0.6,
-  },
-  emailLink: {
-    color: '#6e7781',
-    textDecoration: 'none',
-  },
-  cancelled: {
-    padding: '8px 20px 16px',
-    borderTop: '1px solid #f3f4f6',
-  },
-  cancelledSummary: {
-    fontSize: '13px',
-    color: '#6e7781',
-    cursor: 'pointer',
-    padding: '8px 0',
-  },
-  emptyClassText: {
-    padding: '20px',
-    fontSize: '14px',
-    color: '#6e7781',
-    margin: 0,
-  },
-  empty: {
-    padding: '40px 32px',
-  },
-  emptyText: {
-    fontSize: '14px',
-    color: '#6e7781',
-  },
-  loadingText: {
-    fontSize: '14px',
-    color: '#6e7781',
-  },
 }

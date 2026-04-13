@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { writeClient } from '@/lib/sanity/client'
+import { buildBlastEmail } from '@/lib/email/template'
 
 export async function POST(request: NextRequest) {
   const { id } = await request.json()
@@ -48,27 +49,7 @@ export async function POST(request: NextRequest) {
   }
 
   // Build HTML — paragraphs separated by blank lines, {{email}} replaced by Resend at send time
-  const bodyHtml = blast.body
-    .split('\n\n')
-    .map(p => `<p style="margin:0 0 16px;line-height:1.6">${p.replace(/\n/g, '<br>')}</p>`)
-    .join('')
-
-  const html = `<!DOCTYPE html>
-<html>
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-${blast.previewText ? `<div style="display:none;max-height:0;overflow:hidden">${blast.previewText}</div>` : ''}
-</head>
-<body style="font-family:Georgia,serif;max-width:600px;margin:0 auto;padding:40px 24px;color:#3a3027;background:#fefcf9">
-  <div style="border-bottom:1px solid #e8dfd4;margin-bottom:32px;padding-bottom:16px">
-    <p style="font-size:13px;color:#8a7a6a;margin:0">Gentle Roots Doula Services</p>
-  </div>
-  ${bodyHtml}
-  <div style="border-top:1px solid #e8dfd4;margin-top:40px;padding-top:16px;font-size:12px;color:#8a7a6a">
-    <p style="margin:0">You received this because you subscribed at <a href="${siteUrl}" style="color:#8a7a6a">${siteUrl}</a>.</p>
-    <p style="margin:8px 0 0"><a href="${siteUrl}/api/unsubscribe?email={{email}}" style="color:#8a7a6a">Unsubscribe</a></p>
-  </div>
-</body>
-</html>`
+  const html = buildBlastEmail({ body: blast.body, previewText: blast.previewText, siteUrl })
 
   // Create Resend broadcast
   const createRes = await fetch('https://api.resend.com/broadcasts', {

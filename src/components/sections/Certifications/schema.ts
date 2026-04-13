@@ -1,4 +1,5 @@
 import { defineType, defineField } from 'sanity'
+import { MaterialIconPicker } from '../../../sanity/components/MaterialIconPicker'
 
 export const certifications = defineType({
   name: 'certifications',
@@ -30,7 +31,7 @@ export const certifications = defineType({
               name: 'icon',
               title: 'Icon',
               type: 'string',
-              description: 'Optional. Enter a Material Symbols icon name, e.g. verified_user, self_improvement. Browse icons at fonts.google.com/icons',
+              components: { input: MaterialIconPicker },
             }),
             defineField({ name: 'title', title: 'Title', type: 'string', validation: r => r.required() }),
             defineField({
@@ -41,10 +42,17 @@ export const certifications = defineType({
               description: 'Optional. A short sentence about this certification.',
             }),
             defineField({
+              name: 'certFile',
+              title: 'Certificate PDF',
+              type: 'file',
+              options: { accept: '.pdf' },
+              description: 'Optional. Upload a PDF certificate directly.',
+            }),
+            defineField({
               name: 'certUrl',
               title: 'Certificate URL',
               type: 'url',
-              description: 'Optional. Link to a PDF or certificate page. Shows a "View Certificate" link on the card.',
+              description: 'Optional. Link to an external certificate page (used if no PDF is uploaded above).',
             }),
           ],
           preview: {

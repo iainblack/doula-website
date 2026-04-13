@@ -13,8 +13,6 @@ import { testimonialsPage } from './documents/testimonialsPage'
 import { contactPage } from './documents/contactPage'
 
 // Other content documents
-import { post } from './documents/post'
-import { author } from './documents/author'
 import { classRegistration } from './documents/classRegistration'
 import { servicePackage } from './documents/servicePackage'
 import { subscriber } from './documents/subscriber'
@@ -28,7 +26,6 @@ import { siteTheme } from './singletons/siteTheme'
 
 // Section object schemas — embedded in page documents
 import { hero } from '../../../components/sections/Hero/schema'
-import { imageGallery } from '../../../components/sections/ImageGallery/schema'
 import { editorialBlock } from '../../../components/sections/EditorialBlock/schema'
 import { featureGrid } from '../../../components/sections/FeatureGrid/schema'
 import { testimonialQuote } from '../../../components/sections/TestimonialQuote/schema'
@@ -53,7 +50,6 @@ export const schemaTypes = [
   portableTextBlock,
   // Section objects
   hero,
-  imageGallery,
   editorialBlock,
   featureGrid,
   testimonialQuote,
@@ -77,8 +73,6 @@ export const schemaTypes = [
   testimonialsPage,
   contactPage,
   // Other content
-  post,
-  author,
   classRegistration,
   servicePackage,
   subscriber,

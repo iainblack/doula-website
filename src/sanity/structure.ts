@@ -91,8 +91,6 @@ export const structure: StructureResolver = (S) =>
             .title('Content')
             .items([
               S.documentTypeListItem('servicePackage').title('Service Packages').icon(StarIcon),
-              S.documentTypeListItem('post').title('Blog Posts').icon(EditIcon),
-              S.documentTypeListItem('author').title('Authors').icon(UsersIcon),
             ])
         ),
 

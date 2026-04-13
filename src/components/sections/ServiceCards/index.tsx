@@ -12,13 +12,13 @@ type PackageData = {
   features?: string[]
   pricingLabel?: string
   pricing?: string
+  variant?: 'featured' | 'compact' | 'highlighted' | 'media'
   heroImage?: { image?: { asset?: { _id: string; url: string }; hotspot?: object; crop?: object }; alt?: string }
   sessions?: Array<{ _key: string; duration?: string; label?: string }>
 }
 
 type PackageItem = {
   _key: string
-  variant: 'featured' | 'compact' | 'highlighted' | 'media'
   package?: PackageData
 }
 
@@ -202,8 +202,8 @@ export function ServiceCards({ packages }: ServiceCardsProps) {
   return (
     <section data-testid="service-cards-section" className="max-w-7xl mx-auto px-8 grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
       {packages.map((item) => {
-        if (!item.package) return null
-        const CardComponent = cardMap[item.variant ?? 'featured']
+        if (!item?.package) return null
+        const CardComponent = cardMap[item.package.variant ?? 'featured']
         if (!CardComponent) return null
         return <CardComponent key={item._key} pkg={item.package} />
       })}

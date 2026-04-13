@@ -1,4 +1,5 @@
 import { defineType, defineField } from 'sanity'
+import { MaterialIconPicker } from '../../../sanity/components/MaterialIconPicker'
 
 export const contactDetail = defineType({
   name: 'contactDetail',
@@ -39,7 +40,7 @@ export const contactDetail = defineType({
               name: 'icon',
               title: 'Icon',
               type: 'string',
-              description: 'Optional. Enter a Material Symbols icon name, e.g. phone, mail, location_on. Browse at fonts.google.com/icons',
+              components: { input: MaterialIconPicker },
             }),
             defineField({ name: 'label', title: 'Label', type: 'string', description: 'Optional. e.g. "Email", "Phone", "Location"' }),
             defineField({ name: 'value', title: 'Display Text', type: 'string', description: 'The text shown to visitors, e.g. "hello@example.com"' }),

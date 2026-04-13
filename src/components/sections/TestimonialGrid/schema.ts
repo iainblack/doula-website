@@ -17,7 +17,7 @@ export const testimonialGrid = defineType({
               name: 'overline',
               title: 'Overline',
               type: 'string',
-              description: 'Optional. Small label shown above the quote (Gallery layout only).',
+              description: 'Optional. Small label shown above the quote.',
             }),
             defineField({ name: 'rating', title: 'Rating (stars)', type: 'number', initialValue: 5 }),
             defineField({ name: 'quote', title: 'Pull Quote', type: 'string', validation: r => r.required() }),

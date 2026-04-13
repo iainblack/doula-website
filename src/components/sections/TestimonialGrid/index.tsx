@@ -124,6 +124,11 @@ function AsymmetricLayout({ item }: { item: TestimonialItem }) {
     <section className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
       {/* Text */}
       <div className="lg:col-span-5 space-y-8 order-2 lg:order-1">
+        {item.overline && (
+          <span className="font-body text-primary text-xs tracking-widest uppercase">
+            {item.overline}
+          </span>
+        )}
         {(item.rating ?? 5) > 0 && <StarRating count={item.rating ?? 5} />}
         <h2 className="font-heading text-3xl italic text-foreground leading-snug">
           &ldquo;{item.quote}&rdquo;
@@ -169,6 +174,12 @@ function EditorialCardLayout({ item }: { item: TestimonialItem }) {
       </div>
 
       <div className="relative z-10 text-center space-y-10">
+        {item.overline && (
+          <span className="font-body text-primary text-xs tracking-widest uppercase block">
+            {item.overline}
+          </span>
+        )}
+
         {/* Avatar — only first image */}
         {imgs[0]?.image && (
           <div className="flex justify-center mb-6">
@@ -236,6 +247,7 @@ function GalleryGridLayout({ item }: { item: TestimonialItem }) {
             {item.overline}
           </span>
         )}
+        {(item.rating ?? 5) > 0 && <StarRating count={item.rating ?? 5} />}
         <h2 className="font-heading text-2xl md:text-4xl text-foreground leading-tight">{item.quote}</h2>
 
         {paragraphs.length > 0 && (

@@ -20,28 +20,9 @@ export const serviceCards = defineType({
               to: [{ type: 'servicePackage' }],
               validation: (r) => r.required(),
             }),
-            defineField({
-              name: 'variant',
-              title: 'Card Layout',
-              type: 'string',
-              options: {
-                list: [
-                  { title: 'Featured (wide, image + checklist)', value: 'featured' },
-                  { title: 'Compact (narrow, pull quote)', value: 'compact' },
-                  { title: 'Highlighted (inverted, dark bg)', value: 'highlighted' },
-                  { title: 'Media (sessions grid + image)', value: 'media' },
-                ],
-                layout: 'radio',
-              },
-              initialValue: 'featured',
-              validation: (r) => r.required(),
-            }),
           ],
           preview: {
-            select: {
-              title: 'package.title',
-              subtitle: 'variant',
-            },
+            select: { title: 'package.title', subtitle: 'package.variant' },
             prepare: ({ title, subtitle }) => ({
               title: title || 'Service Package',
               subtitle: subtitle || 'featured',
@@ -49,7 +30,7 @@ export const serviceCards = defineType({
           },
         },
       ],
-      description: 'Add packages and choose a card layout for each.',
+      description: 'Add service packages. Card layout is configured on each package.',
     }),
   ],
   preview: {
