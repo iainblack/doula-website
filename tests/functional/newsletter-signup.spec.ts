@@ -1,8 +1,8 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, type Page } from '@playwright/test'
 
 test.use({ viewport: { width: 1280, height: 800 } })
 
-type PlaywrightPage = Parameters<Parameters<typeof test>[1]>[0]['page']
+type PlaywrightPage = Page
 
 async function gotoClasses(page: PlaywrightPage) {
   await page.goto('/classes')

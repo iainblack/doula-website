@@ -91,6 +91,7 @@ export const structure: StructureResolver = (S) =>
             .title('Content')
             .items([
               S.documentTypeListItem('servicePackage').title('Service Packages').icon(StarIcon),
+              S.documentTypeListItem('class').title('Classes').icon(CalendarIcon),
             ])
         ),
 
@@ -100,14 +101,7 @@ export const structure: StructureResolver = (S) =>
       S.listItem()
         .title('Class Attendees')
         .icon(UsersIcon)
-        .child(
-          S.document()
-            .schemaType('classesPage')
-            .documentId('classesPage')
-            .views([
-              S.view.component(AttendeesView).title('Class Attendees'),
-            ])
-        ),
+        .child(S.component(AttendeesView).title('Class Attendees')),
 
       S.divider(),
 

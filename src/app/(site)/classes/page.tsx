@@ -32,10 +32,10 @@ export default async function ClassesPage() {
   }
 
   if (page?.classList?.classes?.length) {
-    // Collect keys for classes that have an attendeeLimit set
+    // Collect workshop _ids for classes that have an attendeeLimit set
     const keys = page.classList.classes
-      .filter((c: { attendeeLimit?: number; _key?: string }) => c.attendeeLimit != null && c._key)
-      .map((c: { _key: string }) => c._key)
+      .filter((c: { class?: { attendeeLimit?: number; _id?: string } }) => c.class?.attendeeLimit != null && c.class?._id)
+      .map((c: { class: { _id: string } }) => c.class._id)
 
     if (keys.length > 0) {
       try {

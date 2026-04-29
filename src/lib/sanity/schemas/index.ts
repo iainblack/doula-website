@@ -14,6 +14,7 @@ import { contactPage } from './documents/contactPage'
 
 // Other content documents
 import { classRegistration } from './documents/classRegistration'
+import { classType } from './documents/class'
 import { servicePackage } from './documents/servicePackage'
 import { subscriber } from './documents/subscriber'
 import { emailBlast } from './documents/emailBlast'
@@ -74,6 +75,7 @@ export const schemaTypes = [
   contactPage,
   // Other content
   classRegistration,
+  classType,
   servicePackage,
   subscriber,
   emailBlast,

@@ -276,17 +276,33 @@ export type NewsletterSignup = {
 export type ClassList = {
   _type: "classList";
   classes?: Array<{
-    title: string;
-    date?: string;
-    time?: string;
-    location?: string;
-    description?: string;
-    price?: string;
-    ctaLabel?: string;
-    ctaUrl?: string;
-    attendeeLimit?: number;
+    class: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "class";
+    };
     _key: string;
   }>;
+};
+
+export type Class = {
+  _id: string;
+  _type: "class";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title: string;
+  slug: Slug;
+  description?: string;
+  date?: string;
+  time?: string;
+  location?: string;
+  price?: string;
+  ctaLabel?: string;
+  ctaUrl?: string;
+  attendeeLimit?: number;
+  seo?: Seo;
 };
 
 export type Faq = {
@@ -308,7 +324,6 @@ export type ServiceCards = {
       _weak?: boolean;
       [internalGroqTypeReferenceTo]?: "servicePackage";
     };
-    variant: "featured" | "compact" | "highlighted" | "media";
     _key: string;
   }>;
 };
@@ -319,6 +334,7 @@ export type ServicePackage = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
+  variant: "featured" | "compact" | "highlighted" | "media";
   title: string;
   slug: Slug;
   icon?: string;
@@ -691,5 +707,5 @@ export type SanityAssetSourceData = {
   url?: string;
 };
 
-export type AllSanitySchemaTypes = SiteTheme | SiteSettings | Footer | Navbar | EmailBlast | Subscriber | ClassRegistration | ContactPage | TestimonialsPage | ClassesPage | ServicesPage | AboutPage | HomePage | ContactForm | ContactDetail | TestimonialsCtaBanner | TestimonialGrid | NewsletterSignup | ClassList | Faq | ServiceCards | ServicePackage | CtaBanner | Certifications | Philosophy | HeroAbout | TestimonialQuote | FeatureGrid | EditorialBlock | Hero | PortableTextBlock | ImageWithAlt | Seo | Cta | Color | RgbaColor | HsvaColor | HslaColor | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
+export type AllSanitySchemaTypes = SiteTheme | SiteSettings | Footer | Navbar | EmailBlast | Subscriber | ClassRegistration | ContactPage | TestimonialsPage | ClassesPage | ServicesPage | AboutPage | HomePage | ContactForm | ContactDetail | TestimonialsCtaBanner | TestimonialGrid | NewsletterSignup | ClassList | Class | Faq | ServiceCards | ServicePackage | CtaBanner | Certifications | Philosophy | HeroAbout | TestimonialQuote | FeatureGrid | EditorialBlock | Hero | PortableTextBlock | ImageWithAlt | Seo | Cta | Color | RgbaColor | HsvaColor | HslaColor | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;

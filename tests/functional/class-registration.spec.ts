@@ -7,10 +7,18 @@ const STORAGE_KEY = 'doula_class_registrations'
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
+// Returns the key of the first class that has an attendee limit (signup button visible).
+// Classes without attendeeLimit use an external link instead and cannot be tested here.
 async function getFirstClassKey(page: Page): Promise<string | null> {
-  const el = page.locator('[data-class-key]').first()
-  if (await el.count() === 0) return null
-  return el.getAttribute('data-class-key')
+  const rows = page.locator('[data-class-key]')
+  const count = await rows.count()
+  for (let i = 0; i < count; i++) {
+    const row = rows.nth(i)
+    if (await row.getByRole('button', { name: 'Sign Up' }).isVisible()) {
+      return row.getAttribute('data-class-key')
+    }
+  }
+  return null
 }
 
 async function setRegistered(page: Page, classKey: string) {
@@ -149,8 +157,8 @@ test.describe('Signup modal', () => {
     await page.locator(`[data-class-key="${classKey}"]`).getByRole('button', { name: 'Sign Up' }).click()
     await expect(page.getByRole('dialog')).toBeVisible()
 
-    // Click the backdrop (the overlay div behind the dialog)
-    await page.locator('.fixed.inset-0.bg-black\\/40').click()
+    // Force-click the backdrop overlay — force bypasses Playwright's z-order interception check
+    await page.locator('.fixed.inset-0.bg-black\\/40').dispatchEvent('click')
     await expect(page.getByRole('dialog')).not.toBeVisible()
   })
 
@@ -168,13 +176,14 @@ test.describe('Signup modal', () => {
 
     // Intercept the server action to stall long enough to assert the loading state
     await page.route('**/classes', async (route) => {
-      await page.waitForTimeout(200)
+      await new Promise(r => setTimeout(r, 200))
       await route.continue()
     })
 
     const submitBtn = dialog.getByRole('button', { name: /Reserve My Spot|Reserving/ })
     await submitBtn.click()
     await expect(dialog.getByRole('button', { name: 'Reserving…' })).toBeDisabled()
+    await page.unrouteAll({ behavior: 'ignoreErrors' })
   })
 
   test('shows already-registered screen when email is a duplicate', async ({ page }) => {

@@ -21,56 +21,53 @@ type Registration = {
   createdAt: string
 }
 
-type ClassInfo = {
-  _key: string
+type ClassEntry = {
+  _id: string
   title?: string
   date?: string
   attendeeLimit?: number
-}
-
-type ViewProps = {
-  document: {
-    displayed: {
-      classList?: {
-        classes?: ClassInfo[]
-      }
-    }
-  }
 }
 
 const REGISTRATION_QUERY = `*[_type == "classRegistration"] | order(createdAt desc) {
   _id, classKey, name, email, status, createdAt
 }`
 
-export function AttendeesView({ document: { displayed } }: ViewProps) {
+const CLASSES_QUERY = `*[_type == "class"] | order(date asc) {
+  _id, title, date, attendeeLimit
+}`
+
+export function AttendeesView() {
   const client = useClient({ apiVersion: '2025-01-01' })
   const [registrations, setRegistrations] = useState<Registration[]>([])
+  const [workshops, setWorkshops] = useState<ClassEntry[]>([])
   const [loading, setLoading] = useState(true)
 
-  const classes: ClassInfo[] = displayed?.classList?.classes ?? []
-
-  const fetchRegistrations = useCallback(async () => {
-    const result = await client.fetch<Registration[]>(REGISTRATION_QUERY)
-    setRegistrations(result)
+  const fetchData = useCallback(async () => {
+    const [regs, classes] = await Promise.all([
+      client.fetch<Registration[]>(REGISTRATION_QUERY),
+      client.fetch<ClassEntry[]>(CLASSES_QUERY),
+    ])
+    setRegistrations(regs)
+    setWorkshops(classes)
     setLoading(false)
   }, [client])
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchRegistrations()
+    fetchData()
 
     const subscription = client
       .listen('*[_type == "classRegistration"]')
-      .subscribe(() => fetchRegistrations())
+      .subscribe(() => fetchData())
 
     return () => subscription.unsubscribe()
-  }, [client, fetchRegistrations])
+  }, [client, fetchData])
 
-  if (!classes.length) {
+  if (!loading && !workshops.length) {
     return (
       <Box padding={5}>
         <Text muted size={1}>
-          No classes defined yet. Add classes in the Editor tab first.
+          No classes defined yet. Add Classes &amp; Workshops in the Content section first.
         </Text>
       </Box>
     )
@@ -88,8 +85,8 @@ export function AttendeesView({ document: { displayed } }: ViewProps) {
           </Flex>
         ) : (
           <Stack space={4}>
-            {classes.map((cls) => {
-              const classRegs = registrations.filter((r) => r.classKey === cls._key)
+            {workshops.map((cls) => {
+              const classRegs = registrations.filter((r) => r.classKey === cls._id)
               const active = classRegs.filter((r) => r.status === 'active')
               const cancelled = classRegs.filter((r) => r.status === 'cancelled')
               const limit = cls.attendeeLimit ?? null
@@ -97,7 +94,7 @@ export function AttendeesView({ document: { displayed } }: ViewProps) {
               const isFull = spotsLeft !== null && spotsLeft <= 0
 
               return (
-                <Card key={cls._key} border radius={2} overflow="hidden">
+                <Card key={cls._id} border radius={2} overflow="hidden">
                   {/* Class header */}
                   <Card tone="transparent" padding={4} borderBottom>
                     <Flex align="flex-start" justify="space-between" gap={4}>
@@ -112,13 +109,15 @@ export function AttendeesView({ document: { displayed } }: ViewProps) {
                         )}
                       </Stack>
                       <Flex align="center" gap={3} style={{ flexShrink: 0 }}>
-                        <Badge
-                          tone={isFull ? 'critical' : 'positive'}
-                          radius={6}
-                          fontSize={0}
-                        >
-                          {isFull ? 'Full' : 'Open'}
-                        </Badge>
+                        {limit !== null && (
+                          <Badge
+                            tone={isFull ? 'critical' : 'positive'}
+                            radius={6}
+                            fontSize={0}
+                          >
+                            {isFull ? 'Full' : 'Open'}
+                          </Badge>
+                        )}
                         <Text size={1} muted style={{ whiteSpace: 'nowrap' }}>
                           {limit !== null
                             ? `${active.length} / ${limit} registered`

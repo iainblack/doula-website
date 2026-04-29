@@ -122,7 +122,10 @@ export const classesPageQuery = `*[_type == "classesPage"][0]{
     compact
   },
   classList{
-    classes[]{ _key, title, date, time, location, description, price, ctaLabel, ctaUrl, attendeeLimit }
+    classes[]{
+      _key,
+      "class": class->{ _id, title, slug, date, time, location, description, price, ctaLabel, ctaUrl, attendeeLimit }
+    }
   },
   newsletterSignup{
     heading,
@@ -216,6 +219,11 @@ export const servicePackageBySlugQuery = `*[_type == "servicePackage" && slug.cu
   sessions[]{ _key, duration, label },
   ctaLabel,
   seo
+}`
+
+// ── Classes ───────────────────────────────────────────────────────────────
+export const allClassesQuery = `*[_type == "class"] | order(date asc){
+  _id, title, slug, date, time, location, description, price, ctaLabel, ctaUrl, attendeeLimit
 }`
 
 // ── Site settings ──────────────────────────────────────────────────────────

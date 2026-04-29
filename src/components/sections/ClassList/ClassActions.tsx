@@ -55,29 +55,15 @@ export function ClassActions({
   attendeeLimit,
   isFull,
 }: Props) {
-  // null = loading (reading localStorage), true/false = resolved
-  const [isRegistered, setIsRegistered] = useState<boolean | null>(null)
+  const [isRegistered, setIsRegistered] = useState(() =>
+    typeof window !== 'undefined' ? readToken(classKey) !== null : false
+  )
   const [open, setOpen] = useState(false)
   const [view, setView] = useState<View>('signup-form')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const dialogRef = useRef<HTMLDialogElement>(null)
   const router = useRouter()
-
-  // Read localStorage on mount, then verify the token is still active server-side.
-  // This handles the case where the user cancelled via the email link — the token
-  // in localStorage is stale and the cancel button should not show.
-  useEffect(() => {
-    const token = readToken(classKey)
-    if (!token) {
-      setIsRegistered(false)
-      return
-    }
-    checkRegistrationActive(classKey, token).then(active => {
-      if (!active) clearToken(classKey)
-      setIsRegistered(active)
-    })
-  }, [classKey])
 
   useEffect(() => {
     if (open) {
@@ -164,9 +150,6 @@ export function ClassActions({
       router.refresh()
     }
   }
-
-  // Still reading localStorage — render nothing to avoid flicker
-  if (isRegistered === null) return null
 
   return (
     <>

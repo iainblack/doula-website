@@ -13,7 +13,7 @@ test.describe('Cancel registration page', () => {
   })
 
   test('shows an error for an unrecognised token', async ({ page }) => {
-    await page.goto('/cancel-registration?token=not-a-real-token')
+    await page.goto('/api/cancel-registration?token=not-a-real-token')
     await page.waitForLoadState('networkidle')
 
     await expect(page.getByText('Something went wrong')).toBeVisible()
